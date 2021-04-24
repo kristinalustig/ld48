@@ -26,7 +26,7 @@ end
 
 function planetRImage(seed)
   
-  return "/src/p.png"
+  return "src/p.png"
   
 end
 
