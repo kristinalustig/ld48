@@ -1,25 +1,33 @@
 local Galaxy = require "galaxy"
 local Player = require "player"
 local Map = require "map"
+local GameText = require "gametext"
 require "conf"
 
 function love.load()
   
   love.math.setRandomSeed(os.time() + love.mouse.getX())
   
+  GameText.initialize()
+  
   gr = love.graphics
   
-  spaceFont = love.graphics.newImageFont('src/outerfont.png', ' ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!?.,"\'-()$:;@+=*%')
+  spaceFont = gr.newImageFont('src/outerfont.png', ' ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!?.,"\'-()$:;@+=*%')
+  smolFont = gr.newImageFont('src/smolfont.png', ' ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-"\'?.,')
+  smolFontDark = gr.newImageFont('src/smolfontdark.png', ' ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-"\'?.,')
   planetSheet = gr.newImage("src/planetSheet.png")
+  planetDetails = gr.newImage("src/planetDetails.png")
   galaxyRingsOuter = gr.newImage("src/galaxyRings1.png")
   galaxyRingsMiddle = gr.newImage("src/galaxyRings2.png")
   galaxyRingsInner = gr.newImage("src/galaxyRings3.png")
   
   galaxyMap = Map.new()
+  arePlanetDetailsOpen = false
+  openPlanet = nil
   
   intro = 0
   timer = 0
-  nav = false
+  nav = true
   reset = true
   
   cred = gr.newImage("src/cred.png")
@@ -58,6 +66,12 @@ function love.load()
     oy = 0
   }
   
+  planetButton = {
+    src = gr.newImage("src/planetAction.png"),
+    x = 460,
+    y = 496
+    }
+  
   current = {
     src = gr.newImage("src/current.png"),
     x = 0,
@@ -70,6 +84,7 @@ function love.load()
   
   
   print(galaxyMap.layers[1][1].planets[2].name)
+  print(galaxyMap.layers[1][1].planets[2].desc)
   
   -- THIS IS FOR TESTING TO MAKE SURE GENERATION IS WORKING
   for i=1, table.getn(galaxyMap.layers) do
@@ -126,8 +141,10 @@ function love.draw()
     
     --Topbar UI
     gr.draw(fuel, 30, 32)
+    gr.setFont(smolFont)
     gr.draw(cred, 700, 22)
-    gr.printf(player.credits, 750, 38, 100)
+    gr.printf(player.credits, 750, 40, 100)
+    gr.setFont(spaceFont)
     for i=1, 5 do
       local f = fuelEmpty
       if player.fuel >= i then
@@ -144,14 +161,27 @@ function love.draw()
       
     else
     
-    --Text
-    gr.draw(textbox, 30, 90)
-    gr.printf("The quick brown fox jumped over the lazy dog, wow wow wow! I can't believe this is working! How many characters can I generally fit into this thing? Even more than this? Let's keep going and adding even more characters, and add in some numbers too. $500 credits, please! \"NO WAY\" ", 50, 110, 300)
-    
-    --Galaxy
-    
-    positionPlanets(player.location.planets)
-    
+      --Text
+      gr.draw(textbox, 30, 90)
+      gr.printf("The quick brown fox jumped over the lazy dog, wow wow wow! I can't believe this is working! How many characters can I generally fit into this thing? Even more than this? Let's keep going and adding even more characters, and add in some numbers too. $500 credits, please! \"NO WAY\" ", 50, 110, 300)
+      
+      --Galaxy
+      
+      positionPlanets(player.location.planets)
+      
+      if arePlanetDetailsOpen then 
+        gr.setFont(smolFontDark)
+        gr.draw(planetDetails, 420, 340)
+        gr.draw(planetButton.src, planetButton.x, planetButton.y)
+        gr.draw(planetSheet, openPlanet.src, 628, 500)
+        gr.printf(openPlanet.name:upper(), 580, 345, 120)
+        gr.printf(openPlanet.desc:upper(), 454, 386, 300)
+        gr.setFont(smolFont)
+        gr.printf(openPlanet.inter:upper(), planetButton.x + 4, planetButton.y + 10, 140, "center")
+        gr.setFont(spaceFont)
+        
+      end
+      
     end
     
     
@@ -176,7 +206,29 @@ function love.mousepressed(x, y, button, istouch)
     
   elseif nav == false then
     
-    --for x in 
+    if arePlanetDetailsOpen then
+        
+      if testOverlap(x, y, planetButton) then
+        
+        player.credits = player.credits + 10
+        
+      end
+        
+    end
+    
+    
+    for i=1, table.getn(player.location.planets) do
+      if testOverlapPlanets(x, y, player.location.planets[i]) then
+        if not arePlanetDetailsOpen then
+          arePlanetDetailsOpen = true 
+          openPlanet = player.location.planets[i]
+        else
+          arePlanetDetailsOpen = false
+          openPlanet = nil
+        end
+      end
+      
+    end
     
   end
   
@@ -185,6 +237,21 @@ end
 function testOverlap(x, y, item)
   
   iw, ih = item.src:getDimensions()
+  ix, iy = item.x, item.y
+  
+  if x >= ix and y >= iy then
+    if x <= ix+iw and y <= iy+ih then
+      return true
+    end
+  end
+  
+  return false
+
+end
+
+function testOverlapPlanets(x, y, item)
+  
+  iw, ih = 64, 64
   ix, iy = item.x, item.y
   
   if x >= ix and y >= iy then
@@ -228,49 +295,51 @@ function hoverShip()
   
 end
 
+
+-- Todo: move the x and y declarations out into load or update if possible
 function positionPlanets(planets)
   
   local n = table.getn(planets)
   
   if n == 2 then
-    gr.draw(galaxyRingsMiddle, 450, 150)
-    planets[1].x, planets[1].y = 480, 170
-    planets[2].x, planets[2].y = 632, 290
-    gr.draw(planetSheet, planets[1].image, planets[1].x, planets[1].y)
-    gr.draw(planetSheet, planets[2].image, planets[2].x, planets[2].y)
+    gr.draw(galaxyRingsMiddle, 450, 50)
+    planets[1].x, planets[1].y = 480, 70
+    planets[2].x, planets[2].y = 632, 190
+    gr.draw(planetSheet, planets[1].src, planets[1].x, planets[1].y)
+    gr.draw(planetSheet, planets[2].src, planets[2].x, planets[2].y)
   elseif n == 3 then
-    gr.draw(galaxyRingsInner, 450, 150)
-    gr.draw(galaxyRingsOuter, 450, 150)
-    planets[1].x, planets[1].y = 460, 160
-    planets[2].x, planets[2].y = 590, 300
-    planets[3].x, planets[3].y = 660, 200
-    gr.draw(planetSheet, planets[1].image, planets[1].x, planets[1].y)
-    gr.draw(planetSheet, planets[2].image, planets[2].x, planets[2].y)
-    gr.draw(planetSheet, planets[3].image, planets[3].x, planets[3].y)
+    gr.draw(galaxyRingsInner, 450, 50)
+    gr.draw(galaxyRingsOuter, 450, 50)
+    planets[1].x, planets[1].y = 460, 60
+    planets[2].x, planets[2].y = 590, 200
+    planets[3].x, planets[3].y = 660, 100
+    gr.draw(planetSheet, planets[1].src, planets[1].x, planets[1].y)
+    gr.draw(planetSheet, planets[2].src, planets[2].x, planets[2].y)
+    gr.draw(planetSheet, planets[3].src, planets[3].x, planets[3].y)
   elseif n == 4 then
-    gr.draw(galaxyRingsInner, 450, 150)
-    gr.draw(galaxyRingsOuter, 450, 150)
-    planets[1].x, planets[1].y = 490, 210
-    planets[2].x, planets[2].y = 590, 300
-    planets[3].x, planets[3].y = 660, 200
-    planets[4].x, planets[4].y = 470, 340
-    gr.draw(planetSheet, planets[1].image, planets[1].x, planets[1].y)
-    gr.draw(planetSheet, planets[2].image, planets[2].x, planets[2].y)
-    gr.draw(planetSheet, planets[3].image, planets[3].x, planets[3].y)
-    gr.draw(planetSheet, planets[4].image, planets[4].x, planets[4].y)
+    gr.draw(galaxyRingsInner, 450, 50)
+    gr.draw(galaxyRingsOuter, 450, 50)
+    planets[1].x, planets[1].y = 490, 110
+    planets[2].x, planets[2].y = 590, 200
+    planets[3].x, planets[3].y = 660, 100
+    planets[4].x, planets[4].y = 470, 240
+    gr.draw(planetSheet, planets[1].src, planets[1].x, planets[1].y)
+    gr.draw(planetSheet, planets[2].src, planets[2].x, planets[2].y)
+    gr.draw(planetSheet, planets[3].src, planets[3].x, planets[3].y)
+    gr.draw(planetSheet, planets[4].src, planets[4].x, planets[4].y)
   elseif n == 5 then
-    gr.draw(galaxyRingsInner, 450, 150)
-    gr.draw(galaxyRingsOuter, 450, 150)
-    planets[1].x, planets[1].y = 460, 160
-    planets[2].x, planets[2].y = 590, 300
-    planets[3].x, planets[3].y = 660, 200
-    planets[4].x, planets[4].y = 460, 340
-    planets[5].x, planets[5].y = 550, 180
-    gr.draw(planetSheet, planets[1].image, planets[1].x, planets[1].y)
-    gr.draw(planetSheet, planets[2].image, planets[2].x, planets[2].y)
-    gr.draw(planetSheet, planets[3].image, planets[3].x, planets[3].y)
-    gr.draw(planetSheet, planets[4].image, planets[4].x, planets[4].y)
-    gr.draw(planetSheet, planets[5].image, planets[5].x, planets[5].y)
+    gr.draw(galaxyRingsInner, 450, 50)
+    gr.draw(galaxyRingsOuter, 450, 50)
+    planets[1].x, planets[1].y = 460, 60
+    planets[2].x, planets[2].y = 590, 200
+    planets[3].x, planets[3].y = 660, 100
+    planets[4].x, planets[4].y = 460, 240
+    planets[5].x, planets[5].y = 550, 80
+    gr.draw(planetSheet, planets[1].src, planets[1].x, planets[1].y)
+    gr.draw(planetSheet, planets[2].src, planets[2].x, planets[2].y)
+    gr.draw(planetSheet, planets[3].src, planets[3].x, planets[3].y)
+    gr.draw(planetSheet, planets[4].src, planets[4].x, planets[4].y)
+    gr.draw(planetSheet, planets[5].src, planets[5].x, planets[5].y)
   end
   
 end

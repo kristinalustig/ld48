@@ -15,7 +15,7 @@ function M.new(parentType)
       
       }, M)
   
-  self.image = planetRImage(self.imgSeed)
+  self.src = planetRImage(self.imgSeed)
   self.name = planetRName(self.nameSeed)
   self.pType = planetRType(self.typeSeed, self.parentType)
   self.desc = planetRDesc(self.descSeed)
@@ -45,7 +45,8 @@ end
 
 function planetRDesc(seed)
   
-  return "This is a cool planet description. Wow."
+  return planetDescriptions[1]
+
   
 end
 
