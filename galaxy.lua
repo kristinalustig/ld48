@@ -9,7 +9,8 @@ function M.new(galaxyType)
       
       galaxyType = galaxyType or "random",
       numPlanets = love.math.random(2, 5),
-      planets = {}
+      planets = {},
+      visited = false
       
       }, M)
   

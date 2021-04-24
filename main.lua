@@ -148,18 +148,9 @@ function love.draw()
     gr.draw(textbox, 30, 90)
     gr.printf("The quick brown fox jumped over the lazy dog, wow wow wow! I can't believe this is working! How many characters can I generally fit into this thing? Even more than this? Let's keep going and adding even more characters, and add in some numbers too. $500 credits, please! \"NO WAY\" ", 50, 110, 300)
     
-    
-    
     --Galaxy
     
     positionPlanets(player.location.planets)
---    for i=1, table.getn(player.location.planets) do
---      gr.draw(planetSheet, player.location.planets[i].image, 400 + (66*i), 400)
---    end
-    
-    
-    --Planet
-    -- gr.draw(planetSheet, player.currPlanet.image, 400, 400)
     
     end
     
@@ -181,7 +172,11 @@ function love.mousepressed(x, y, button, istouch)
   elseif intro == 3 then
     
     if testOverlap(x, y, arrowR) then intro = 0
-      elseif testOverlap(x, y, arrowL) then intro = 2 end
+    elseif testOverlap(x, y, arrowL) then intro = 2 end
+    
+  elseif nav == false then
+    
+    --for x in 
     
   end
   
@@ -239,31 +234,43 @@ function positionPlanets(planets)
   
   if n == 2 then
     gr.draw(galaxyRingsMiddle, 450, 150)
-    gr.draw(planetSheet, planets[1].image, 480, 170)
-    gr.draw(planetSheet, planets[2].image, 632, 290)
+    planets[1].x, planets[1].y = 480, 170
+    planets[2].x, planets[2].y = 632, 290
+    gr.draw(planetSheet, planets[1].image, planets[1].x, planets[1].y)
+    gr.draw(planetSheet, planets[2].image, planets[2].x, planets[2].y)
   elseif n == 3 then
     gr.draw(galaxyRingsInner, 450, 150)
     gr.draw(galaxyRingsOuter, 450, 150)
-    gr.draw(planetSheet, planets[1].image, 460, 160)
-    gr.draw(planetSheet, planets[2].image, 590, 300)
-    gr.draw(planetSheet, planets[3].image, 660, 200)
-    
+    planets[1].x, planets[1].y = 460, 160
+    planets[2].x, planets[2].y = 590, 300
+    planets[3].x, planets[3].y = 660, 200
+    gr.draw(planetSheet, planets[1].image, planets[1].x, planets[1].y)
+    gr.draw(planetSheet, planets[2].image, planets[2].x, planets[2].y)
+    gr.draw(planetSheet, planets[3].image, planets[3].x, planets[3].y)
   elseif n == 4 then
     gr.draw(galaxyRingsInner, 450, 150)
     gr.draw(galaxyRingsOuter, 450, 150)
-    gr.draw(planetSheet, planets[1].image, 490, 210)
-    gr.draw(planetSheet, planets[2].image, 590, 300)
-    gr.draw(planetSheet, planets[3].image, 660, 200)
-    gr.draw(planetSheet, planets[4].image, 470, 340)
+    planets[1].x, planets[1].y = 490, 210
+    planets[2].x, planets[2].y = 590, 300
+    planets[3].x, planets[3].y = 660, 200
+    planets[4].x, planets[4].y = 470, 340
+    gr.draw(planetSheet, planets[1].image, planets[1].x, planets[1].y)
+    gr.draw(planetSheet, planets[2].image, planets[2].x, planets[2].y)
+    gr.draw(planetSheet, planets[3].image, planets[3].x, planets[3].y)
+    gr.draw(planetSheet, planets[4].image, planets[4].x, planets[4].y)
   elseif n == 5 then
     gr.draw(galaxyRingsInner, 450, 150)
     gr.draw(galaxyRingsOuter, 450, 150)
-    gr.draw(planetSheet, planets[1].image, 460, 160)
-    gr.draw(planetSheet, planets[2].image, 590, 300)
-    gr.draw(planetSheet, planets[3].image, 660, 200)
-    gr.draw(planetSheet, planets[4].image, 460, 340)
-    gr.draw(planetSheet, planets[5].image, 550, 180)
-
+    planets[1].x, planets[1].y = 460, 160
+    planets[2].x, planets[2].y = 590, 300
+    planets[3].x, planets[3].y = 660, 200
+    planets[4].x, planets[4].y = 460, 340
+    planets[5].x, planets[5].y = 550, 180
+    gr.draw(planetSheet, planets[1].image, planets[1].x, planets[1].y)
+    gr.draw(planetSheet, planets[2].image, planets[2].x, planets[2].y)
+    gr.draw(planetSheet, planets[3].image, planets[3].x, planets[3].y)
+    gr.draw(planetSheet, planets[4].image, planets[4].x, planets[4].y)
+    gr.draw(planetSheet, planets[5].image, planets[5].x, planets[5].y)
   end
   
 end

@@ -10,7 +10,8 @@ function M.new(parentType)
       nameSeed = love.math.random(1, 100),
       descSeed = love.math.random(1, 100),
       typeSeed = love.math.random(1, 100),
-      interactionSeed = love.math.random(1, 100)
+      interactionSeed = love.math.random(1, 100),
+      visited = false
       
       }, M)
   
