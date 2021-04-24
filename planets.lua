@@ -6,7 +6,7 @@ function M.new(parentType)
   local self = setmetatable({
       
       parentType = parentType,
-      imgSeed = math.random(1, 100),
+      imgSeed = math.random(1, 25),
       nameSeed = math.random(1, 100),
       descSeed = math.random(1, 100),
       typeSeed = math.random(1, 100),
@@ -26,7 +26,12 @@ end
 
 function planetRImage(seed)
   
-  return "src/p.png"
+  local posY = math.floor(seed / 5) + 1
+  local posX = seed % 5
+  
+  p = gr.newQuad(64*posX, 64*posY, 64, 64, planetSheet:getDimensions())
+  
+  return p
   
 end
 

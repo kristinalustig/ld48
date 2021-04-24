@@ -5,15 +5,18 @@ require "conf"
 
 function love.load()
   
+  love.math.setRandomSeed(os.time() + love.mouse.getX())
+  
   gr = love.graphics
   
   spaceFont = love.graphics.newImageFont('src/outerfont.png', ' ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!?.,"\'-()$:;@+=*%')
+  planetSheet = gr.newImage("src/planetSheet.png")
   
   galaxyMap = Map.new()
   
   intro = 0
   timer = 0
-  nav = true
+  nav = false
   reset = true
   
   stats = gr.newImage("src/stats.png")
@@ -140,9 +143,20 @@ function love.draw()
     gr.draw(textbox, 30, 90)
     gr.printf("The quick brown fox jumped over the lazy dog, wow wow wow! I can't believe this is working! How many characters can I generally fit into this thing? Even more than this? Let's keep going and adding even more characters, and add in some numbers too. $500 credits, please! \"NO WAY\" ", 50, 110, 300)
     
-    end
+    
     
     --Galaxy
+    
+    for i=1, table.getn(player.location.planets) do
+      gr.draw(planetSheet, player.location.planets[i].image, 400 + (66*i), 400)
+    end
+    
+    
+    --Planet
+    gr.draw(planetSheet, player.currPlanet.image, 400, 400)
+    
+    end
+    
     
   end
   
