@@ -210,6 +210,9 @@ function love.mousepressed(x, y, button, istouch)
         
       if testOverlap(x, y, planetButton) then
         
+        -- Todo: make sure that players can only do this once, prob add a flag on the action itself
+        -- make it a table instead of a string
+        
         player.credits = player.credits + 10
         
       end
