@@ -11,9 +11,10 @@ function love.load()
   
   galaxyMap = Map.new()
   
-  intro = 1
-  
+  intro = 0
   timer = 0
+  nav = true
+  reset = true
   
   stats = gr.newImage("src/stats.png")
   textbox = gr.newImage("src/textbox.png")
@@ -38,6 +39,28 @@ function love.load()
   }
   arrowL.src = arrowL.src1
   
+  fuel = gr.newImage("src/fuelCellFull.png")
+  fuelEmpty = gr.newImage("src/fuelCellEmpty.png")
+  
+  ship = {
+    src = gr.newImage("src/ship.png"),
+    x = 40, 
+    y = 240,
+    r = 0,
+    ox = 0,
+    oy = 0
+  }
+  
+  current = {
+    src = gr.newImage("src/current.png"),
+    x = 0,
+    y = 392
+  }
+  
+  
+  
+  player = Player.new()
+  
   
   print(galaxyMap.layers[1][1].planets[2].name)
   
@@ -51,8 +74,6 @@ function love.load()
     end
   end
   
-  
-  
 end
 
 function love.update(dt)
@@ -64,6 +85,8 @@ function love.update(dt)
   elseif intro == 3 then
     animArrow(arrowR)
     animArrow(arrowL)
+  elseif nav == true then
+    hoverShip()
   end
   
 end
@@ -72,6 +95,8 @@ function love.draw()
   
   gr.setFont(spaceFont)
   
+  
+  -- HERE WE CAN PUT THE TUTORIAL!
   if intro == 1 then
     
     gr.draw(title, 0, 0)
@@ -90,9 +115,34 @@ function love.draw()
     
   else
     
+    --ACTUAL GAME STUFF GOES HERE
+    
+    --Topbar UI
     gr.draw(stats, 30, 22)
+    gr.printf(player.credits, 550, 38, 100)
+    for i=1, 5 do
+      local f = fuelEmpty
+      if player.fuel >= i then
+        f = fuel
+      end
+      gr.draw(f, 100 + (45 * i), 32)
+    end
+    
+    if nav then
+    
+      gr.draw(ship.src, ship.x, ship.y, ship.r, 1, 1, ship.ox, ship.oy)
+      gr.draw(current.src, current.x, current.y)
+      gr.printf("Current A", 36, 500, 180, "center")
+      
+    else
+    
+    --Text
     gr.draw(textbox, 30, 90)
     gr.printf("The quick brown fox jumped over the lazy dog, wow wow wow! I can't believe this is working! How many characters can I generally fit into this thing? Even more than this? Let's keep going and adding even more characters, and add in some numbers too. $500 credits, please! \"NO WAY\" ", 50, 110, 300)
+    
+    end
+    
+    --Galaxy
     
   end
   
@@ -110,7 +160,7 @@ function love.mousepressed(x, y, button, istouch)
     
   elseif intro == 3 then
     
-    if testOverlap(x, y, arrowR) then intro = 4
+    if testOverlap(x, y, arrowR) then intro = 0
       elseif testOverlap(x, y, arrowL) then intro = 2 end
     
   end
@@ -140,6 +190,26 @@ function animArrow(a)
       a.src = a.src1 
     end 
   end
+  
+end
+
+function hoverShip()
+
+  if timer % 2 == 0 then
+    if ship.oy <= 6 and reset == true then
+      ship.oy = ship.oy + 1
+    else
+      if reset == true then 
+        reset = false
+      end
+      ship.oy = ship.oy - 1
+      if ship.oy <= 0 then 
+        reset = true
+
+        end
+    end
+  end
+
   
 end
 

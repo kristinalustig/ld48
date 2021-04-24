@@ -1,3 +1,5 @@
 function love.conf(t)
-  t.console = true
+  t.window.title = "OUTER -- a Ludum Dare 48 game"
+  t.modules.touch = false
+  t.modules.video = false
 end
