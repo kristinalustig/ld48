@@ -11,6 +11,9 @@ function love.load()
   
   spaceFont = love.graphics.newImageFont('src/outerfont.png', ' ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!?.,"\'-()$:;@+=*%')
   planetSheet = gr.newImage("src/planetSheet.png")
+  galaxyRingsOuter = gr.newImage("src/galaxyRings1.png")
+  galaxyRingsMiddle = gr.newImage("src/galaxyRings2.png")
+  galaxyRingsInner = gr.newImage("src/galaxyRings3.png")
   
   galaxyMap = Map.new()
   
@@ -19,7 +22,8 @@ function love.load()
   nav = false
   reset = true
   
-  stats = gr.newImage("src/stats.png")
+  cred = gr.newImage("src/cred.png")
+  fuel = gr.newImage("src/fuel.png")
   textbox = gr.newImage("src/textbox.png")
   title = gr.newImage("src/title.png")
   start = {
@@ -42,7 +46,7 @@ function love.load()
   }
   arrowL.src = arrowL.src1
   
-  fuel = gr.newImage("src/fuelCellFull.png")
+  fuelFull = gr.newImage("src/fuelCellFull.png")
   fuelEmpty = gr.newImage("src/fuelCellEmpty.png")
   
   ship = {
@@ -121,12 +125,13 @@ function love.draw()
     --ACTUAL GAME STUFF GOES HERE
     
     --Topbar UI
-    gr.draw(stats, 30, 22)
-    gr.printf(player.credits, 550, 38, 100)
+    gr.draw(fuel, 30, 32)
+    gr.draw(cred, 700, 22)
+    gr.printf(player.credits, 750, 38, 100)
     for i=1, 5 do
       local f = fuelEmpty
       if player.fuel >= i then
-        f = fuel
+        f = fuelFull
       end
       gr.draw(f, 100 + (45 * i), 32)
     end
@@ -135,7 +140,7 @@ function love.draw()
     
       gr.draw(ship.src, ship.x, ship.y, ship.r, 1, 1, ship.ox, ship.oy)
       gr.draw(current.src, current.x, current.y)
-      gr.printf("Current A", 36, 500, 180, "center")
+      gr.printf(player.location.name, 36, 500, 180, "center")
       
     else
     
@@ -147,13 +152,14 @@ function love.draw()
     
     --Galaxy
     
-    for i=1, table.getn(player.location.planets) do
-      gr.draw(planetSheet, player.location.planets[i].image, 400 + (66*i), 400)
-    end
+    positionPlanets(player.location.planets)
+--    for i=1, table.getn(player.location.planets) do
+--      gr.draw(planetSheet, player.location.planets[i].image, 400 + (66*i), 400)
+--    end
     
     
     --Planet
-    gr.draw(planetSheet, player.currPlanet.image, 400, 400)
+    -- gr.draw(planetSheet, player.currPlanet.image, 400, 400)
     
     end
     
@@ -226,4 +232,40 @@ function hoverShip()
 
   
 end
+
+function positionPlanets(planets)
+  
+  local n = table.getn(planets)
+  
+  if n == 2 then
+    gr.draw(galaxyRingsMiddle, 450, 150)
+    gr.draw(planetSheet, planets[1].image, 480, 170)
+    gr.draw(planetSheet, planets[2].image, 632, 290)
+  elseif n == 3 then
+    gr.draw(galaxyRingsInner, 450, 150)
+    gr.draw(galaxyRingsOuter, 450, 150)
+    gr.draw(planetSheet, planets[1].image, 460, 160)
+    gr.draw(planetSheet, planets[2].image, 590, 300)
+    gr.draw(planetSheet, planets[3].image, 660, 200)
+    
+  elseif n == 4 then
+    gr.draw(galaxyRingsInner, 450, 150)
+    gr.draw(galaxyRingsOuter, 450, 150)
+    gr.draw(planetSheet, planets[1].image, 490, 210)
+    gr.draw(planetSheet, planets[2].image, 590, 300)
+    gr.draw(planetSheet, planets[3].image, 660, 200)
+    gr.draw(planetSheet, planets[4].image, 470, 340)
+  elseif n == 5 then
+    gr.draw(galaxyRingsInner, 450, 150)
+    gr.draw(galaxyRingsOuter, 450, 150)
+    gr.draw(planetSheet, planets[1].image, 460, 160)
+    gr.draw(planetSheet, planets[2].image, 590, 300)
+    gr.draw(planetSheet, planets[3].image, 660, 200)
+    gr.draw(planetSheet, planets[4].image, 460, 340)
+    gr.draw(planetSheet, planets[5].image, 550, 180)
+
+  end
+  
+end
+
 

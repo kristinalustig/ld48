@@ -8,7 +8,7 @@ function M.new(galaxyType)
   local self = setmetatable({
       
       galaxyType = galaxyType or "random",
-      numPlanets = math.random(2, 5),
+      numPlanets = love.math.random(2, 5),
       planets = {}
       
       }, M)
@@ -19,8 +19,17 @@ function M.new(galaxyType)
     
   end
   
+  self.name = randomName(love.math.random(1, 50))
+  
   return self
   
 end
 
+function randomName(seed)
+  return "COOLIO"
+end
+
+  
+  
 return M
+  

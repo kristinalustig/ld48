@@ -21,13 +21,13 @@ function M.new()
 
   for i=2, self.layerNum do
   
-    local numOptions = math.random(2, 7)
+    local numOptions = love.math.random(2, 5)
     
     self.layers[i] = {}
     
     for j=1, numOptions do
       
-      local seed = math.random(1, 100)
+      local seed = love.math.random(1, 100)
       local t = ""
       if seed <= 30 then t = "fuel"
       elseif seed <= 60 then t = "ore"

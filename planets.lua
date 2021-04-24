@@ -6,11 +6,11 @@ function M.new(parentType)
   local self = setmetatable({
       
       parentType = parentType,
-      imgSeed = math.random(1, 25),
-      nameSeed = math.random(1, 100),
-      descSeed = math.random(1, 100),
-      typeSeed = math.random(1, 100),
-      interactionSeed = math.random(1, 100)
+      imgSeed = love.math.random(1, 25),
+      nameSeed = love.math.random(1, 100),
+      descSeed = love.math.random(1, 100),
+      typeSeed = love.math.random(1, 100),
+      interactionSeed = love.math.random(1, 100)
       
       }, M)
   
@@ -26,7 +26,8 @@ end
 
 function planetRImage(seed)
   
-  local posY = math.floor(seed / 5) + 1
+  local posY = math.floor(seed / 5)
+  if seed == 5 then posY = 0 elseif seed == 25 then posY = 4 end
   local posX = seed % 5
   
   p = gr.newQuad(64*posX, 64*posY, 64, 64, planetSheet:getDimensions())
