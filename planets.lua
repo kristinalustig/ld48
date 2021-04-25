@@ -7,8 +7,8 @@ function M.new(parentType)
       
       parentType = parentType,
       imgSeed = love.math.random(1, 25),
-      nameSeed = love.math.random(1, 100),
-      descSeed = love.math.random(1, 100),
+      nameSeed = love.math.random(1, 40),
+      descSeed = love.math.random(1, 20),
       typeSeed = love.math.random(1, 100),
       interactionSeed = love.math.random(1, 100),
       visited = false
@@ -39,13 +39,13 @@ end
 
 function planetRName(seed)
   
-  return "PLANET B-100"
+  return planetNames[seed]
   
 end
 
 function planetRDesc(seed)
   
-  return planetDescriptions[1]
+  return planetDescriptions[seed]
 
   
 end

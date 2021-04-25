@@ -25,9 +25,9 @@ function love.load()
   arePlanetDetailsOpen = false
   openPlanet = nil
   
-  intro = 0
+  intro = 1
   timer = 0
-  nav = true
+  nav = false
   reset = true
   
   cred = gr.newImage("src/cred.png")
@@ -70,6 +70,12 @@ function love.load()
     src = gr.newImage("src/planetAction.png"),
     x = 460,
     y = 496
+  }
+  
+  galaxyButton = {
+    src = gr.newImage("src/galaxyButton.png"),
+    x = 90,
+    y = 460
     }
   
   current = {
@@ -126,12 +132,12 @@ function love.draw()
     
   elseif intro == 2 then
     
-    gr.printf("Here's a tutorial page to test it out.", 100, 200, 600, "center")
+    gr.printf("Your name is 72H. You're a space adventurer, also known as a spaceventurer. (Unfortunately, you can't convince anyone else to call you a spaceventurer.) Your mission? Explore the furthest reaches of deep space! You must balance mining fuel, earning credits, and indulging your wanderlust.", 100, 200, 600, "center")
     gr.draw(arrowR.src, arrowR.x, arrowR.y)
   
   elseif intro == 3 then
   
-    gr.printf("Here's a second tutorial page to test it out.", 100, 200, 600, "center")
+    gr.printf("To 'play' the 'game' (aka pilot your spaceship), you must choose which galaxy to warp to, and then scan the  planets to find out more about them. From there, you can take available actions or move on to the next galaxy. An ending, you ask? Does SPACE have an ending? (No, it does not. Neither does this game. But it *does* have animated tutorial arrows, and handmade fonts!) Press the animated tutorial arrow to continue.", 100, 200, 600, "center")
     gr.draw(arrowR.src, arrowR.x, arrowR.y)
     gr.draw(arrowL.src, arrowL.x, arrowL.y)
     
@@ -163,6 +169,10 @@ function love.draw()
     
       --Text
       gr.draw(textbox, 30, 90)
+      gr.draw(galaxyButton.src, galaxyButton.x, galaxyButton.y)
+      gr.setFont(smolFontDark)
+      gr.printf("LEAVE GALAXY", galaxyButton.x+8, galaxyButton.y+24, 232, "center")
+      gr.setFont(spaceFont)
       gr.printf("The quick brown fox jumped over the lazy dog, wow wow wow! I can't believe this is working! How many characters can I generally fit into this thing? Even more than this? Let's keep going and adding even more characters, and add in some numbers too. $500 credits, please! \"NO WAY\" ", 50, 110, 300)
       
       --Galaxy
@@ -174,8 +184,8 @@ function love.draw()
         gr.draw(planetDetails, 420, 340)
         gr.draw(planetButton.src, planetButton.x, planetButton.y)
         gr.draw(planetSheet, openPlanet.src, 628, 500)
-        gr.printf(openPlanet.name:upper(), 580, 345, 120)
-        gr.printf(openPlanet.desc:upper(), 454, 386, 300)
+        gr.printf(openPlanet.name:upper(), 580, 350, 120)
+        gr.printf(openPlanet.desc:upper(), 452, 386, 265)
         gr.setFont(smolFont)
         gr.printf(openPlanet.inter:upper(), planetButton.x + 4, planetButton.y + 10, 140, "center")
         gr.setFont(spaceFont)
