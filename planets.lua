@@ -28,7 +28,7 @@ end
 function planetRImage(seed)
   
   local posY = math.floor(seed / 5)
-  if seed == 5 then posY = 0 elseif seed == 25 then posY = 4 end
+  if seed == 5 then posY = 0 elseif seed == 40 then posY = 4 end
   local posX = seed % 5
   
   p = gr.newQuad(64*posX, 64*posY, 64, 64, planetSheet:getDimensions())

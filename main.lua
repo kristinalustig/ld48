@@ -53,10 +53,11 @@ function love.load()
   isModalOpen = false
   firstTimeWarp = true
   areStatsOpen = false
+  gameOver = false
   
-  intro = 1
+  intro = 0
   timer = 0
-  nav = true
+  nav = false
   reset = true
   
   
@@ -133,6 +134,14 @@ function love.load()
     y = 12
   }
   
+  actionOk = {
+    src = gr.newImage("src/actionOk.png"),
+    x = 280,
+    y = 340
+  }
+  
+  scanner = love.mouse.newCursor("src/scanner.png", 20, 20)
+  
   
   player = Player.new()
 
@@ -151,9 +160,21 @@ function love.update(dt)
     hoverShip()
   end
   
+  if player.fuel <= 0 then
+    gameOver = true
+    --calculate gameOver shit here
+  end
+  
+  
 end
 
 function love.draw()
+  
+  if gameOver then
+    -- put gameOver shit here
+    
+    return
+  end
   
   gr.setFont(spaceFont)
   
@@ -191,7 +212,7 @@ function love.draw()
   else
     
     animateSpace()
-    gr.draw(bg.curr, 0, 0)
+    gr.draw(bg.curr, 0, 0, 0, 1, -1, 0, 600)
     
     --Topbar UI
     gr.draw(fuel, 30, 12)
@@ -272,7 +293,7 @@ function love.draw()
       gr.setFont(smolFontDark)
       gr.printf("Leave Galaxy", galaxyButton.x+8, galaxyButton.y+24, 232, "center")
       gr.setFont(spaceFont)
-      gr.printf("The quick brown fox jumped over the lazy dog, wow wow wow! I can't believe this is working! How many characters can I generally fit into this thing? Even more than this? Let's keep going and adding even more characters, and add in some numbers too. $500 credits, please! \"NO WAY\" ", 50, 110, 300)
+      gr.printf(player.location.desc, 50, 110, 300)
       
       --Galaxy
       
@@ -284,7 +305,7 @@ function love.draw()
         gr.draw(planetButton.src, planetButton.x, planetButton.y)
         gr.draw(planetSheet, openPlanet.src, 628, 500)
         gr.printf(openPlanet.name, 580, 350, 120)
-        gr.printf(openPlanet.desc, 452, 386, 265)
+        gr.printf(openPlanet.desc, 452, 386, 260)
         gr.setFont(smolFont)
         local buttonLabel = ""
         if openPlanet.actionTaken then 
@@ -292,7 +313,7 @@ function love.draw()
           gr.setFont(smolFontDark)
         else 
           buttonLabel = openPlanet.inter[1] end
-        gr.printf(buttonLabel, planetButton.x + 4, planetButton.y + 10, 140, "center")
+        gr.printf(buttonLabel, planetButton.x + 4, planetButton.y + 15, 140, "center")
         gr.setFont(spaceFont)
         
       end
@@ -300,9 +321,15 @@ function love.draw()
       if isModalOpen then
         gr.draw(modal, 0, 0)
         gr.setFont(smolFontDark)
-        gr.printf("Here is some sample modal text that will be filled in by the open planet action", 200, 200, 400, "center")
-        gr.draw(modalYes.src, modalYes.x, modalYes.y)
-        gr.draw(modalNo.src, modalNo.x, modalNo.y)
+        if openPlanet.actionTaken then
+          gr.printf(openPlanet.inter[6], 200, 200, 400, "center")
+          gr.draw(actionOk.src, actionOk.x, actionOk.y)
+          gr.printf("OKAY", actionOk.x + 100, actionOk.y + 24, 100)
+        else
+          gr.printf(openPlanet.inter[4], 200, 200, 400, "center")
+          gr.draw(modalYes.src, modalYes.x, modalYes.y)
+          gr.draw(modalNo.src, modalNo.x, modalNo.y)
+        end
         gr.setFont(spaceFont)
       end
       
@@ -329,6 +356,33 @@ function love.draw()
   
   
 end
+
+function love.mousemoved(x, y, dx, dy, istouch)
+  
+  if not areStatsOpen and (intro < 1 or intro > 4) then
+    if nav then
+      for i=1, table.getn(galaxyMap.layers[player.currentLayer + 1]) do
+        if testOverlapGals(x, y, galaxyMap.layers[player.currentLayer + 1][i]) then
+          love.mouse.setCursor(scanner)
+          return
+        end
+      end
+      love.mouse.setCursor()
+    else
+      for i=1, table.getn(player.location.planets) do
+        if testOverlapPlanets(x, y, player.location.planets[i]) then
+          love.mouse.setCursor(scanner)
+          return
+        end
+      end 
+      love.mouse.setCursor()
+    end
+  else
+    love.mouse.setCursor()
+  end
+
+end
+
 
 function love.mousepressed(x, y, button, istouch)
   
@@ -403,15 +457,18 @@ function love.mousepressed(x, y, button, istouch)
       
       if isModalOpen then
         
+        if testOverlap(x, y, actionOk) and openPlanet.actionTaken then
+          isModalOpen = false
+          return
+        end
+        
         if testOverlap(x, y, modalYes) then
           
           executeAction()
           openPlanet.actionTaken = true
-          isModalOpen = false
           return
           
         elseif testOverlap(x, y, modalNo) then
-          
           isModalOpen = false
           return
         end
@@ -614,7 +671,7 @@ function executeAction()
   
   -- fuel is mined
   if stat == "fuel" then
-    player.fuel = player.fuel + fuelEarnRate
+    player.fuel = player.fuel + (change * player.fuelEarnRate)
     
   -- an amount of fuel is purchased or sold
   elseif stat == "fuelTransaction" then

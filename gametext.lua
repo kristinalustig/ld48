@@ -128,30 +128,38 @@ function M.initialize()
   
   
   fuelActions = {
-    --button name, stat, impact, flavor, purchase price
-    {"FuelIncrease", "fuel", 0, "flavor text", 0},
-    {"FuelIncrease", "fuel", 0, "flavor text", 0},
-    {"FuelIncrease", "fuel", 0, "flavor text", 0},
-    {"FuelIncrease", "fuel", 0, "flavor text", 0},
-    {"FuelIncrease", "fuel", 0, "flavor text", 0},
-    {"FuelIncrease", "fuel", 0, "flavor text", 0},
-    {"FuelIncrease", "fuel", 0, "flavor text", 0},
-    {"FuelIncrease", "fuel", 0, "flavor text", 0},
+    --button name, stat, impact, flavor, purchase price, confirmation text
+    {"Drill for 2 fuel", "fuel", 2, 
+      "The beings on this planet haven't learned how to drill for fuel. Joke's on them, more for you! Drill?", 0, 
+      "It worked! Look at all this fuel! You gained 2 fuel (times your multiplier, of course)."},
+    
+    {"Attempt to retrieve 1 fuel", "fuel", 1, 
+      "Apparently the beings who live here actually eat fuel for breakfast, lunch, and dinner. They're all too happy to feed you some. Do you 'accept'?", 0, 
+      "Mmm, yummy. Fuel. You gained 1 fuel (times your multiplier)."},
+    
+    {"Drill for 1 fuel", "fuel", 1, 
+      "flavor text", 0, 
+      "confirmtext"},
+    
+    {"Attempt to retrieve 1 fuel", "fuel", 1, 
+      "There's no fuel left on this planet, it's been drained dry. But you do see large vats of the stuff, unguarded. Do you?", 0,
+      "Wow. If this game had a karma system, you would definitely lose some karma. But you got some fuel, so, good for you I guess? (You gained 1 fuel times your multiplier.)"},
+    
+    {"Drill for 1 fuel", "fuel", -1, 
+      "Fuel seems to be pretty scarce here, but you're pretty sure you can find some in the less populated regions. Give it a try?", 0, 
+      "confirm"},
     
     {"fuelTransaction", "fuelTransaction", -1, "flavor text", 10},
     {"fuelTransaction", "fuelTransaction", -1, "flavor text", 20},
     {"fuelTransaction", "fuelTransaction", -1, "flavor text", 10},
     {"fuelTransaction", "fuelTransaction", -1, "flavor text", 20},
     {"fuelTransaction", "fuelTransaction", 1, "flavor text", -10},
-    {"fuelTransaction", "fuelTransaction", 1, "flavor text", -20},
-    {"fuelTransaction", "fuelTransaction", 1, "flavor text", -15},
     
     {"fuelBurnRate", "fuelBurnRate", -.15, "flavor", -10},
     {"fuelBurnRate", "fuelBurnRate", -.25, "flavor", 0},
     {"fuelBurnRate", "fuelBurnRate", -.05, "flavor", 0},
     {"fuelBurnRate", "fuelBurnRate", -.05, "flavor", 0},
     {"fuelBurnRate", "fuelBurnRate", .25, "flavor", -20},
-    {"fuelBurnRate", "fuelBurnRate", -.25, "flavor", -10},
     
     {"fuelEarnRate", "fuelEarnRate", .25, "flavor", -10},
     {"fuelEarnRate", "fuelEarnRate", .25, "flavor", -10},
@@ -168,6 +176,9 @@ function M.initialize()
     {"credits", "credits", 1, "flavor", -10},
     {"credits", "credits", 1, "flavor", -10},
     {"credits", "credits", 1, "flavor", -10},
+    
+    {"credits", "credits", 1, "flavor", -10},
+    {"credits", "credits", 1, "flavor", -10},
     {"credits", "credits", 1, "flavor", -10},
     {"credits", "credits", 1, "flavor", -10},
     {"credits", "credits", 1, "flavor", -10},
@@ -177,8 +188,18 @@ function M.initialize()
     {"fuelTransaction", "fuelTransaction", -1, "flavor text", 10},
     {"fuelTransaction", "fuelTransaction", -1, "flavor text", 20},
     {"fuelTransaction", "fuelTransaction", 1, "flavor text", -10},
-    {"fuelTransaction", "fuelTransaction", 1, "flavor text", -20},
-    {"fuelTransaction", "fuelTransaction", 1, "flavor text", -15}
+    
+    {"moneyEarnRate", "moneyEarnRate", .25, "flavor", -10},
+    {"moneyEarnRate", "moneyEarnRate", .25, "flavor", -10},
+    {"moneyEarnRate", "moneyEarnRate", .25, "flavor", -10},
+    {"moneyEarnRate", "moneyEarnRate", .25, "flavor", -10},
+    {"moneyEarnRate", "moneyEarnRate", .25, "flavor", -10},
+    
+    {"tradeDiscount", "tradeDiscount", .25, "flavor", -10},
+    {"tradeDiscount", "tradeDiscount", .25, "flavor", -10},
+    {"tradeDiscount", "tradeDiscount", .25, "flavor", -10},
+    {"tradeDiscount", "tradeDiscount", .25, "flavor", -10},
+    {"tradeDiscount", "tradeDiscount", .25, "flavor", -10}
   }
   
   
@@ -189,7 +210,6 @@ function M.initialize()
     {"fuelBurnRate", "fuelBurnRate", -.05, "flavor", 0},
     {"fuelBurnRate", "fuelBurnRate", -.05, "flavor", 0},
     {"fuelBurnRate", "fuelBurnRate", .25, "flavor", -20},
-    {"fuelBurnRate", "fuelBurnRate", -.25, "flavor", -10},
     
     {"fuelEarnRate", "fuelEarnRate", .25, "flavor", -10},
     {"fuelEarnRate", "fuelEarnRate", .25, "flavor", -10},
@@ -202,9 +222,7 @@ function M.initialize()
     {"moneyEarnRate", "moneyEarnRate", .25, "flavor", -10},
     {"moneyEarnRate", "moneyEarnRate", .25, "flavor", -10},
     {"moneyEarnRate", "moneyEarnRate", .25, "flavor", -10},
-    {"moneyEarnRate", "moneyEarnRate", .25, "flavor", -10},
     
-    {"tradeDiscount", "tradeDiscount", .25, "flavor", -10},
     {"tradeDiscount", "tradeDiscount", .25, "flavor", -10},
     {"tradeDiscount", "tradeDiscount", .25, "flavor", -10},
     {"tradeDiscount", "tradeDiscount", .25, "flavor", -10},
@@ -212,29 +230,96 @@ function M.initialize()
     {"tradeDiscount", "tradeDiscount", .25, "flavor", -10}
   }
   
-  planetActions = {
-    --button name, stat, impact, flavor, purchase price
-    -- DONT FORGET TO MENTION DISCOUNTS
-    -- TODO: create extra text that has disclaimers for each type
-    
-    
-    
-    
-    
-    
-    
-  }
-  
   galaxyDescriptions = {
+    "Here's a galaxy description that will probably be a couple of sentences. They won't really say much about the galaxies at all, probably just more babbling about whatever.",
+    "Your scanner perks up and turns to chat with you. 'It's lovely here at this time of year, isn't it?' You start to explain about how 'year' is a pretty relative term, but you decide to let it go.",
+    "galdesc",
+    "galdesc",
+    "galdesc",
+    "galdesc",
+    "galdesc",
+    "galdesc",
+    "galdesc",
+    "galdesc",
+    "galdesc",
+    "galdesc",
+    "galdesc",
+    "galdesc",
+    "galdesc",
+    "galdesc",
+    "galdesc",
+    "galdesc",
+    "galdesc",
+    "galdesc",
+    "galdesc",
+    "galdesc",
+    "galdesc",
+    "galdesc",
+    "galdesc"
     
   }
   
   galaxyNames = {
-    
+    "Sector X",
+    "Harpades",
+    "GalaxyName",
+    "GalaxyName",
+    "GalaxyName",
+    "GalaxyName",
+    "GalaxyName",
+    "GalaxyName",
+    "GalaxyName",
+    "GalaxyName",
+    "GalaxyName",
+    "GalaxyName",
+    "GalaxyName",
+    "GalaxyName",
+    "GalaxyName",
+    "GalaxyName",
+    "GalaxyName",
+    "GalaxyName",
+    "GalaxyName",
+    "GalaxyName",
+    "GalaxyName",
+    "GalaxyName",
+    "GalaxyName",
+    "GalaxyName",
+    "GalaxyName",
+    "GalaxyName",
+    "GalaxyName",
+    "GalaxyName",
+    "GalaxyName",
+    "GalaxyName",
+    "GalaxyName",
+    "GalaxyName",
+    "GalaxyName",
+    "GalaxyName",
+    "GalaxyName",
+    "GalaxyName",
+    "GalaxyName",
+    "GalaxyName",
+    "GalaxyName",
+    "GalaxyName"
   }
   
   warpNarrative = { 
-    
+    "Ah, yes. The great outdoors. Just you and your trusty scannerbot, Gert. Pronounced 'Jert.' It's quite particular about that.",
+    "Gert is the only person who ever calls you a spaceventurer, so you don't mind at all that it's an AI. and the I part is a stretch.",
+    "You've been traveling for years, but Gert's witty planet descriptions on its scanner printouts are keeping you company. You are reading them, right?",
+    "You've been gone for so long now that you're not even sure you could find your way back. Not that a spaceventurer like you would. Go back, that is.",
+    "During that last warp, Gert got a bit jumbled. You didn't realize how much you valued its company until you almost lost it.",
+    "You got a virtuAd last night for the SpaceScanner2000. Tempting, but nothing could replace Gert. Also, it's too expensive.",
+    "Gert woke you up this morning. 'SEV. THERE ARE BUTTERFLIES IN THE CONTAINMENT CHAMBER.' You're not sure what kind of fly a 'butter' one is, but it sounds concerning.",
+    "Do spaceventurers date? You can't help but wonder, but every time you check Tander, the closest matches with compatible bits are always at least 3 light years away.",
+    "On your way to this galaxy, space pirates tried to board. Gert scared them off with a very convincing Mr. T impression. When you tried to ask it what Mr. T was, all it said was 'I pity the fool.' Whatever that means.",
+    "warpnarr",
+    "warpnarr",
+    "warpnarr",
+    "warpnarr",
+    "warpnarr",
+    "warpnarr",
+    "warpnarr"
+
   }
   
 

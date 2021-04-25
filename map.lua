@@ -7,16 +7,16 @@ function M.new()
   
   local self = setmetatable({
       
-      layerNum = 10,
+      layerNum = 15,
       layers = {}
       
     }, M)
 
   self.layers[1] = {
-      Galaxy.new("fuel"),
-      Galaxy.new("ore"),
-      Galaxy.new("research"),
-      Galaxy.new("random")
+      Galaxy.new("fuel", 1),
+      Galaxy.new("ore", 1),
+      Galaxy.new("research", 1),
+      Galaxy.new("random", 1)
     }
 
   for i=2, self.layerNum do
@@ -34,7 +34,7 @@ function M.new()
       elseif seed <= 90 then t = "research"
       else t = "random" end
       
-      self.layers[i][j] = Galaxy.new(t)
+      self.layers[i][j] = Galaxy.new(t, i)
       
     end
     
