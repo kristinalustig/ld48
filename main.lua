@@ -14,8 +14,8 @@ function love.load()
   
   -- Static assets and fonts (non-interactive)
   spaceFont = gr.newImageFont('src/outerfont.png', ' ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!?.,"\'-()$:;@+=*%')
-  smolFont = gr.newImageFont('src/smolfont.png', ' ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-"\'?.,')
-  smolFontDark = gr.newImageFont('src/smolfontdark.png', ' ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-"\'?.,')
+  smolFont = gr.newImageFont('src/smolfont.png', ' ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-"\'?.,abcdefghijklmnopqrstuvwxyz!@()*+=%')
+  smolFontDark = gr.newImageFont('src/smolfontdark.png', ' ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-"\'?.,abcdefghijklmnopqrstuvwxyz!@()*+=%')
   planetSheet = gr.newImage("src/planetSheet.png")
   planetDetails = gr.newImage("src/planetDetails.png")
   galaxyRingsOuter = gr.newImage("src/galaxyRings1.png")
@@ -34,6 +34,15 @@ function love.load()
   title = gr.newImage("src/title.png")
   fuelFull = gr.newImage("src/fuelCellFull.png")
   fuelEmpty = gr.newImage("src/fuelCellEmpty.png")
+  statSheet = gr.newImage("src/statsheet.png")
+  
+  bg = {
+    src1 = gr.newImage("src/titlebgstars1.png"),
+    src2 = gr.newImage("src/titlebgstars2.png"),
+    src3 = gr.newImage("src/titlebgstars3.png"),
+    src4 = gr.newImage("src/titlebgstars4.png")
+  }
+  bg.curr = bg.src1
   
   --important global variables
   galaxyMap = Map.new()
@@ -43,8 +52,9 @@ function love.load()
   openGalaxy = nil
   isModalOpen = false
   firstTimeWarp = true
+  areStatsOpen = false
   
-  intro = 5
+  intro = 1
   timer = 0
   nav = true
   reset = true
@@ -117,6 +127,13 @@ function love.load()
     y = 360
   }
   
+  statLink = {
+    src = gr.newImage("src/statlink.png"),
+    x = 440,
+    y = 12
+  }
+  
+  
   player = Player.new()
 
 end
@@ -146,9 +163,13 @@ function love.draw()
     
     gr.setFont(smolFont)
     gr.draw(title, 0, 0)
+    animateSpace()
+    gr.draw(bg.curr, 0, 0)
     gr.draw(start.src, start.x, start.y)
-    gr.printf(("A Ludum Dare 48 compo entry by kristinamay"):upper(), 0, 550, 800, "center")
+    gr.printf("A Ludum Dare 48 compo entry by kristinamay", 0, 550, 800, "center")
     gr.setFont(spaceFont)
+    
+    
     
   elseif intro == 2 then
     
@@ -169,32 +190,51 @@ function love.draw()
     
   else
     
+    animateSpace()
+    gr.draw(bg.curr, 0, 0)
+    
     --Topbar UI
-    gr.draw(fuel, 30, 32)
+    gr.draw(fuel, 30, 12)
     gr.setFont(smolFont)
-    gr.draw(cred, 700, 22)
-    gr.printf(player.credits, 750, 40, 100)
-    gr.setFont(spaceFont)
+    gr.draw(cred, 700, 2)
+    gr.printf(player.credits, 750, 20, 100)
+    
+    
     for i=1, 5 do
       local f = fuelEmpty
       if player.fuel >= i then
         f = fuelFull
       end
-      gr.draw(f, 100 + (45 * i), 32)
+      gr.draw(f, 100 + (45 * i), 12)
     end
+    
+    gr.printf(tonumber(string.format("%.1f", player.fuel)) .. "U", 376, 25, 100)
+    
+    gr.setFont(spaceFont)
+    
+    gr.draw(statLink.src, statLink.x, statLink.y)
     
     if nav then
     
       gr.draw(ship.src, ship.x, ship.y, ship.r, 1, 1, ship.ox, ship.oy)
       gr.draw(current.src, current.x, current.y)
-      gr.printf(player.location.name, 36, 500, 180, "center")
+      gr.printf("Return to " .. player.location.name, 36, 485, 180, "center")
+      local locString = "You are currently " .. player.currentLayer
+      if player.currentLayer == 1 then
+        locString = locString .. " light year away from home."
+      else
+        locString = locString .. " light years away from home."
+      end
+      gr.setFont(smolFont)
+      gr.printf(locString, 300, 550, 240)
+      gr.setFont(spaceFont)
       
       positionGalaxies(galaxyMap.layers[player.currentLayer + 1])
       
       if areGalaxyDetailsOpen then
         gr.setFont(smolFont)
         gr.draw(galaxyDetails, 300, 300)
-        gr.printf(openGalaxy.name:upper(), 410, 320, 100)
+        gr.printf(openGalaxy.name, 410, 320, 100)
         
         local gt = nil
         
@@ -210,10 +250,17 @@ function love.draw()
         
         gr.draw(gt, 312, 346)
         
-        gr.printf(openGalaxy.numPlanets .. " PLANETS", 416, 350, 120)
+        gr.printf(openGalaxy.numPlanets .. " Planets", 416, 350, 120)
         gr.draw(warpButton.src, warpButton.x, warpButton.y)
         
-        gr.setFont(spaceFont)
+        if isWarpModalOpen then
+          gr.draw(modal, 0, 0)
+          gr.setFont(smolFontDark)
+          gr.printf("Just so you know, once you pick a system to warp to in this galaxy, you can't come back. Choose wisely!", 200, 200, 400, "center")
+          gr.draw(warpButton.src, warpButton.x, warpButton.y)
+          gr.setFont(spaceFont)
+        end
+        
         
       end
       
@@ -223,7 +270,7 @@ function love.draw()
       gr.draw(textbox, 30, 90)
       gr.draw(galaxyButton.src, galaxyButton.x, galaxyButton.y)
       gr.setFont(smolFontDark)
-      gr.printf("LEAVE GALAXY", galaxyButton.x+8, galaxyButton.y+24, 232, "center")
+      gr.printf("Leave Galaxy", galaxyButton.x+8, galaxyButton.y+24, 232, "center")
       gr.setFont(spaceFont)
       gr.printf("The quick brown fox jumped over the lazy dog, wow wow wow! I can't believe this is working! How many characters can I generally fit into this thing? Even more than this? Let's keep going and adding even more characters, and add in some numbers too. $500 credits, please! \"NO WAY\" ", 50, 110, 300)
       
@@ -236,15 +283,15 @@ function love.draw()
         gr.draw(planetDetails, 420, 340)
         gr.draw(planetButton.src, planetButton.x, planetButton.y)
         gr.draw(planetSheet, openPlanet.src, 628, 500)
-        gr.printf(openPlanet.name:upper(), 580, 350, 120)
-        gr.printf(openPlanet.desc:upper(), 452, 386, 265)
+        gr.printf(openPlanet.name, 580, 350, 120)
+        gr.printf(openPlanet.desc, 452, 386, 265)
         gr.setFont(smolFont)
         local buttonLabel = ""
         if openPlanet.actionTaken then 
           buttonLabel = "DONE" 
           gr.setFont(smolFontDark)
         else 
-          buttonLabel = openPlanet.inter[1]:upper() end
+          buttonLabel = openPlanet.inter[1] end
         gr.printf(buttonLabel, planetButton.x + 4, planetButton.y + 10, 140, "center")
         gr.setFont(spaceFont)
         
@@ -253,7 +300,7 @@ function love.draw()
       if isModalOpen then
         gr.draw(modal, 0, 0)
         gr.setFont(smolFontDark)
-        gr.printf(("Here is some sample modal text that will be filled in by the open planet action"):upper(), 200, 200, 400, "center")
+        gr.printf("Here is some sample modal text that will be filled in by the open planet action", 200, 200, 400, "center")
         gr.draw(modalYes.src, modalYes.x, modalYes.y)
         gr.draw(modalNo.src, modalNo.x, modalNo.y)
         gr.setFont(spaceFont)
@@ -265,9 +312,33 @@ function love.draw()
     
   end
   
+  if areStatsOpen then
+    gr.setFont(smolFont)
+    gr.draw(statSheet, 390, 50)
+    local burn = player.fuelBurnRate .. " per jump"
+    local earn = player.fuelEarnRate .. "x drill multip."
+    local cred = player.moneyEarnRate .. "c fuel sale price"
+    local disc = player.tradeDiscount .. "% off purchases"
+    gr.printf(burn, 542, 70, 90)
+    gr.printf(earn, 542, 130, 90)
+    gr.printf(cred, 542, 190, 90)
+    gr.printf(disc, 542, 250, 90)
+    gr.setFont(spaceFont)
+    
+  end
+  
+  
 end
 
 function love.mousepressed(x, y, button, istouch)
+  
+  if isWarpModalOpen then
+    if not testOverlap(x, y, warpButton) then
+      isWarpModalOpen = false
+      firstTimeWarp = false
+      return
+    end
+  end
   
   if intro == 1 then
     
@@ -284,14 +355,30 @@ function love.mousepressed(x, y, button, istouch)
     
   elseif nav == true then
     
+    if testOverlap(x, y, current) then
+      nav = false
+      return
+    end
+    
+    
     if areGalaxyDetailsOpen then
       if testOverlap(x, y, warpButton) then
-        nav = false
-        player.currentLayer = player.currentLayer + 1
-        player.location = openGalaxy
-        openGalaxy = nil
-        areGalaxyDetailsOpen = false
-        return
+        if firstTimeWarp then
+          isWarpModalOpen = true
+          firstTimeWarp = false
+          return
+        else
+          nav = false
+          player.currentLayer = player.currentLayer + 1
+          player.fuel = player.fuel - player.fuelBurnRate
+          player.location = openGalaxy
+          openGalaxy = nil
+          areGalaxyDetailsOpen = false
+          firstTimeWarp = false
+          isWarpModalOpen = false
+          return
+        end
+        
       end
     end
     
@@ -364,6 +451,15 @@ function love.mousepressed(x, y, button, istouch)
     end
     
   end
+  
+  if testOverlap(x, y, statLink) then
+    if areStatsOpen then
+      areStatsOpen = false
+    else
+      areStatsOpen = true
+    end
+  end
+  
   
 end
 
@@ -452,7 +548,7 @@ function positionPlanets(planets)
     gr.draw(galaxyRingsMiddle, 450, 50)
     planets[1].x, planets[1].y = 480, 70
     planets[2].x, planets[2].y = 632, 190
-    gr.draw(planetSheet, planets[1].src, planets[1].x, planets[1].y)
+    gr.draw(planetSheet, planets[1].src, planets[1].x, planets[1].y, .1)
     gr.draw(planetSheet, planets[2].src, planets[2].x, planets[2].y)
   elseif n == 3 then
     gr.draw(galaxyRingsInner, 450, 50)
@@ -461,8 +557,8 @@ function positionPlanets(planets)
     planets[2].x, planets[2].y = 590, 200
     planets[3].x, planets[3].y = 660, 100
     gr.draw(planetSheet, planets[1].src, planets[1].x, planets[1].y)
-    gr.draw(planetSheet, planets[2].src, planets[2].x, planets[2].y)
-    gr.draw(planetSheet, planets[3].src, planets[3].x, planets[3].y)
+    gr.draw(planetSheet, planets[2].src, planets[2].x, planets[2].y, .1)
+    gr.draw(planetSheet, planets[3].src, planets[3].x, planets[3].y, .2)
   elseif n == 4 then
     gr.draw(galaxyRingsInner, 450, 50)
     gr.draw(galaxyRingsOuter, 450, 50)
@@ -471,9 +567,9 @@ function positionPlanets(planets)
     planets[3].x, planets[3].y = 660, 100
     planets[4].x, planets[4].y = 470, 240
     gr.draw(planetSheet, planets[1].src, planets[1].x, planets[1].y)
-    gr.draw(planetSheet, planets[2].src, planets[2].x, planets[2].y)
-    gr.draw(planetSheet, planets[3].src, planets[3].x, planets[3].y)
-    gr.draw(planetSheet, planets[4].src, planets[4].x, planets[4].y)
+    gr.draw(planetSheet, planets[2].src, planets[2].x, planets[2].y, .1)
+    gr.draw(planetSheet, planets[3].src, planets[3].x, planets[3].y, .2)
+    gr.draw(planetSheet, planets[4].src, planets[4].x, planets[4].y, .3)
   elseif n == 5 then
     gr.draw(galaxyRingsInner, 450, 50)
     gr.draw(galaxyRingsOuter, 450, 50)
@@ -483,10 +579,10 @@ function positionPlanets(planets)
     planets[4].x, planets[4].y = 460, 240
     planets[5].x, planets[5].y = 550, 80
     gr.draw(planetSheet, planets[1].src, planets[1].x, planets[1].y)
-    gr.draw(planetSheet, planets[2].src, planets[2].x, planets[2].y)
-    gr.draw(planetSheet, planets[3].src, planets[3].x, planets[3].y)
-    gr.draw(planetSheet, planets[4].src, planets[4].x, planets[4].y)
-    gr.draw(planetSheet, planets[5].src, planets[5].x, planets[5].y)
+    gr.draw(planetSheet, planets[2].src, planets[2].x, planets[2].y, .1)
+    gr.draw(planetSheet, planets[3].src, planets[3].x, planets[3].y, .2)
+    gr.draw(planetSheet, planets[4].src, planets[4].x, planets[4].y, .3)
+    gr.draw(planetSheet, planets[5].src, planets[5].x, planets[5].y, .4)
   end
   
 end
@@ -562,6 +658,24 @@ function executeAction()
   
   
 end
+
+function animateSpace()
+  
+  if timer % 100 == 0 then
+    if bg.curr == bg.src4 then
+      bg.curr = bg.src1
+    elseif bg.curr == bg.src1 then
+      bg.curr = bg.src2
+    elseif bg.curr == bg.src2 then
+      bg.curr = bg.src3
+    else
+      bg.curr = bg.src4
+    end
+  end
+  
+  
+end
+
 
 
 

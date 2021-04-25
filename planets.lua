@@ -10,7 +10,7 @@ function M.new(parentType)
       nameSeed = love.math.random(1, 40),
       descSeed = love.math.random(1, 20),
       typeSeed = love.math.random(1, 100),
-      interactionSeed = love.math.random(1, 25),
+      interactionSeed = love.math.random(1, 10),
       actionTaken = false
       
       }, M)
@@ -67,7 +67,7 @@ function planetRInteraction(seed, pType)
     return moneyActions[seed]
   elseif pType == "research" then
     return researchActions[seed]
-  elseif pType == "random" then
+  else
     if seed % 2 == 0 then
       return moneyActions[seed]
     elseif seed % 3 == 0 then

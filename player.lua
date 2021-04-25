@@ -13,7 +13,7 @@ function M.new()
       fuelBurnRate = 1,
       fuelEarnRate = .5,
       moneyEarnRate = 10,
-      tradeDiscount = 0
+      tradeDiscount = 20
       
       }, M)
   
