@@ -15,7 +15,7 @@ function M.initialize()
     "Seek Unknown Planets, You Only? Eating All Seven Tacos Eases Roughness, Even Grassy Globes. Capital Oddities On Letters.",
     "You're pretty sure that one of these planets is named after the developer's dog. Is it this one? Who knows, this is all randomized.",
     "This planet is full of humanoid creatures playing audio games, browsing Twudder, and eating Chalk-Fillet. Eerie.",
-    "Spiders. Let's get out of here. Or, y'know, not.",
+    "Spiders. Let's get out of here. Or, y'know, we could stay. You're the pilot, here.",
     "The only music that the creatures on this planet seem to listen to is the Eagles Greatest Hits.",
     "Massive rolling hills, as far as the eye can see. Your spaceship can see further, though.",
     "This entire planet smells exactly like lemon meringue pie. Warning: it is poison. Do not eat the planet.",
@@ -127,8 +127,8 @@ function M.initialize()
   }
   
   planetActions = {
-    {"Action","fuel",-1},
     --button name, stat, impact
+    {"Action","fuel",-1},
   }
   
   galaxyDescriptions = {

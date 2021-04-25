@@ -20,12 +20,20 @@ function love.load()
   galaxyRingsOuter = gr.newImage("src/galaxyRings1.png")
   galaxyRingsMiddle = gr.newImage("src/galaxyRings2.png")
   galaxyRingsInner = gr.newImage("src/galaxyRings3.png")
+  galaxySheet = gr.newImage("src/galaxySheet.png")
+  galaxyDetails = gr.newImage("src/galaxyDetails.png")
+  moneyDetail = gr.newImage("src/moneyDetail.png")
+  scienceDetail = gr.newImage("src/scienceDetail.png")
+  mysteryDetail = gr.newImage("src/mysteryDetail.png")
+  fuelDetail = gr.newImage("src/fuelDetail.png")
   
   galaxyMap = Map.new()
   arePlanetDetailsOpen = false
+  areGalaxyDetailsOpen = false
   openPlanet = nil
+  openGalaxy = nil
   
-  intro = 1
+  intro = 0
   timer = 0
   nav = false
   reset = true
@@ -78,6 +86,12 @@ function love.load()
     y = 460
     }
   
+  warpButton = {
+    src = gr.newImage("src/warpButton.png"),
+    x = 410,
+    y = 370
+    }
+  
   current = {
     src = gr.newImage("src/current.png"),
     x = 0,
@@ -117,6 +131,8 @@ function love.update(dt)
     hoverShip()
   end
   
+  
+  
 end
 
 function love.draw()
@@ -132,12 +148,12 @@ function love.draw()
     
   elseif intro == 2 then
     
-    gr.printf("Your name is 72H. You're a space adventurer, also known as a spaceventurer. (Unfortunately, you can't convince anyone else to call you a spaceventurer.) Your mission? Explore the furthest reaches of deep space! You must balance mining fuel, earning credits, and indulging your wanderlust.", 100, 200, 600, "center")
+    gr.printf("Your name is 72H. You're a space adventurer, also known as a spaceventurer. (Unfortunately, you can't convince anyone else to call you a spaceventurer.) Your mission? Explore the furthest reaches of deep space! You must balance mining fuel, earning credits, and indulging your wanderlust. \n \n ...also, getting people to call you a spaceventurer.", 100, 200, 600, "center")
     gr.draw(arrowR.src, arrowR.x, arrowR.y)
   
   elseif intro == 3 then
   
-    gr.printf("To 'play' the 'game' (aka pilot your spaceship), you must choose which galaxy to warp to, and then scan the  planets to find out more about them. From there, you can take available actions or move on to the next galaxy. An ending, you ask? Does SPACE have an ending? (No, it does not. Neither does this game. But it *does* have animated tutorial arrows, and handmade fonts!) Press the animated tutorial arrow to continue.", 100, 200, 600, "center")
+    gr.printf("To 'play' the 'game' (aka pilot your spaceship), you must choose which solar system to warp to, and then scan the planets to find out more about them. From there, you can take available actions or move on to the next system. An ending, you ask? Does SPACE have an ending? (No, it does not. Neither does this game. But it *does* have animated tutorial arrows, and handmade fonts!) Press the animated tutorial arrow to continue.", 100, 200, 600, "center")
     gr.draw(arrowR.src, arrowR.x, arrowR.y)
     gr.draw(arrowL.src, arrowL.x, arrowL.y)
     
@@ -165,6 +181,34 @@ function love.draw()
       gr.draw(current.src, current.x, current.y)
       gr.printf(player.location.name, 36, 500, 180, "center")
       
+      positionGalaxies(galaxyMap.layers[player.currentLayer + 1])
+      
+      if areGalaxyDetailsOpen then
+        gr.setFont(smolFont)
+        gr.draw(galaxyDetails, 300, 300)
+        gr.printf(openGalaxy.name:upper(), 410, 320, 100)
+        
+        local gt = nil
+        
+        if openGalaxy.galaxyType == "fuel" then
+          gt = fuelDetail
+        elseif openGalaxy.galaxyType == "ore" then
+          gt = moneyDetail
+        elseif openGalaxy.galaxyType == "research" then
+          gt = scienceDetail
+        elseif openGalaxy.galaxyType == "random" then
+          gt = mysteryDetail
+        end
+        
+        gr.draw(gt, 312, 346)
+        
+        gr.printf(openGalaxy.numPlanets .. " PLANETS", 416, 350, 120)
+        gr.draw(warpButton.src, warpButton.x, warpButton.y)
+        
+        gr.setFont(spaceFont)
+        
+      end
+      
     else
     
       --Text
@@ -187,7 +231,13 @@ function love.draw()
         gr.printf(openPlanet.name:upper(), 580, 350, 120)
         gr.printf(openPlanet.desc:upper(), 452, 386, 265)
         gr.setFont(smolFont)
-        gr.printf(openPlanet.inter:upper(), planetButton.x + 4, planetButton.y + 10, 140, "center")
+        local buttonLabel = ""
+        if openPlanet.actionTaken then 
+          buttonLabel = "DONE" 
+          gr.setFont(smolFontDark)
+        else 
+          buttonLabel = openPlanet.inter[1]:upper() end
+        gr.printf(buttonLabel, planetButton.x + 4, planetButton.y + 10, 140, "center")
         gr.setFont(spaceFont)
         
       end
@@ -214,16 +264,45 @@ function love.mousepressed(x, y, button, istouch)
     if testOverlap(x, y, arrowR) then intro = 0
     elseif testOverlap(x, y, arrowL) then intro = 2 end
     
+  elseif nav == true then
+    
+    if areGalaxyDetailsOpen then
+      if testOverlap(x, y, warpButton) then
+        nav = false
+        player.currentLayer = player.currentLayer + 1
+        player.location = openGalaxy
+        openGalaxy = nil
+        areGalaxyDetailsOpen = false
+        return
+      end
+    end
+    
+    
+    for i=1, table.getn(galaxyMap.layers[player.currentLayer + 1]) do
+      if testOverlapGals(x, y, galaxyMap.layers[player.currentLayer + 1][i]) then
+        if not areGalaxyDetailsOpen then
+          areGalaxyDetailsOpen = true
+          openGalaxy = galaxyMap.layers[player.currentLayer + 1][i]
+        elseif areGalaxyDetailsOpen and openGalaxy ~= galaxyMap.layers[player.currentLayer + 1][i] then
+          openGalaxy = galaxyMap.layers[player.currentLayer + 1][i]
+        else
+          areGalaxyDetailsOpen = false
+          openGalaxy = nil
+        end
+      end
+    end
+    
   elseif nav == false then
     
     if arePlanetDetailsOpen then
         
-      if testOverlap(x, y, planetButton) then
+      if testOverlap(x, y, planetButton) and not openPlanet.actionTaken then
         
         -- Todo: make sure that players can only do this once, prob add a flag on the action itself
         -- make it a table instead of a string
         
         player.credits = player.credits + 10
+        openPlanet.actionTaken = true
         
       end
         
@@ -234,6 +313,8 @@ function love.mousepressed(x, y, button, istouch)
       if testOverlapPlanets(x, y, player.location.planets[i]) then
         if not arePlanetDetailsOpen then
           arePlanetDetailsOpen = true 
+          openPlanet = player.location.planets[i]
+        elseif arePlanetDetailsOpen and openPlanet ~= player.location.planets[i] then
           openPlanet = player.location.planets[i]
         else
           arePlanetDetailsOpen = false
@@ -265,6 +346,20 @@ end
 function testOverlapPlanets(x, y, item)
   
   iw, ih = 64, 64
+  ix, iy = item.x, item.y
+  
+  if x >= ix and y >= iy then
+    if x <= ix+iw and y <= iy+ih then
+      return true
+    end
+  end
+  
+  return false
+
+end
+
+function testOverlapGals(x, y, item)
+  iw, ih = 192, 192
   ix, iy = item.x, item.y
   
   if x >= ix and y >= iy then
@@ -356,5 +451,25 @@ function positionPlanets(planets)
   end
   
 end
+
+function positionGalaxies(gals)
+  
+  local n = table.getn(gals)
+  
+  if n == 2 then
+    gals[1].x, gals[1].y = 400, 100
+    gals[2].x, gals[2].y = 560, 250
+  elseif n >= 3 then
+    gals[1].x, gals[1].y = 400, 100
+    gals[2].x, gals[2].y = 580, 200
+    gals[3].x, gals[3].y = 580, 400
+  end
+  
+  for i=1, n do
+    gr.draw(galaxySheet, gals[i].src, gals[i].x, gals[i].y)
+  end
+  
+end
+
 
 

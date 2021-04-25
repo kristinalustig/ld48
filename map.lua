@@ -21,7 +21,7 @@ function M.new()
 
   for i=2, self.layerNum do
   
-    local numOptions = love.math.random(2, 5)
+    local numOptions = love.math.random(2, 3)
     
     self.layers[i] = {}
     

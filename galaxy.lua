@@ -21,6 +21,7 @@ function M.new(galaxyType)
   end
   
   self.name = randomName(love.math.random(1, 50))
+  self.src = randomImg(love.math.random(1, 16))
   
   return self
   
@@ -30,7 +31,18 @@ function randomName(seed)
   return "COOLIO"
 end
 
+function randomImg(seed)
   
+  local posY = math.floor(seed / 4)
+  if seed == 4 then posY = 0 elseif seed == 16 then posY = 3 end
+  local posX = seed % 4
+  
+  g = gr.newQuad(192*posX, 192*posY, 192, 192, galaxySheet:getDimensions())
+  
+  return g
+
+end
+
   
 return M
   
