@@ -11,7 +11,8 @@ function M.new(parentType)
       descSeed = love.math.random(1, 20),
       typeSeed = love.math.random(1, 100),
       interactionSeed = love.math.random(1, 10),
-      actionTaken = false
+      actionTaken = false,
+      actionResult = nil
       
       }, M)
   

@@ -21,7 +21,7 @@ function M.new(galaxyType, layerNum)
     
   end
   
-  self.name = randomName(love.math.random(1, 40))
+  self.name = randomName(love.math.random(1, 26))
   self.src = randomImg(love.math.random(1, 16))
   self.desc = randomDesc(love.math.random(1, 25), layerNum)
   
@@ -47,7 +47,7 @@ end
 
 function randomDesc(seed, l)
   
-  return warpNarrative[l] .. " Anyway. \n \n" .. galaxyDescriptions[seed]
+  return warpNarrative[l] .. " Anyway."
   
 end
 

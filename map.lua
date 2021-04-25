@@ -44,9 +44,4 @@ function M.new()
   
 end
 
-function M:expand(layers)
-  
-  
-end
-
 return M

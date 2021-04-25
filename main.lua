@@ -54,6 +54,13 @@ function love.load()
   firstTimeWarp = true
   areStatsOpen = false
   gameOver = false
+  canCheckCursor = false
+  
+  
+  tooMuchFuel = "You're already maxed out on fuel!"
+  notEnoughFuel = "You can't sell fuel that you don't have."
+  notEnoughCreds = "You're gonna buy that, huh? With what money?"
+  
   
   intro = 0
   timer = 0
@@ -160,7 +167,8 @@ function love.update(dt)
     hoverShip()
   end
   
-  if player.fuel <= 0 then
+  if player.fuel < 0 then
+    canCheckCursor = false
     gameOver = true
     --calculate gameOver shit here
   end
@@ -250,12 +258,14 @@ function love.draw()
       gr.printf(locString, 300, 550, 240)
       gr.setFont(spaceFont)
       
-      positionGalaxies(galaxyMap.layers[player.currentLayer + 1])
+      if player.currentLayer < layerNum then
+        positionGalaxies(galaxyMap.layers[player.currentLayer + 1])
+      end
       
       if areGalaxyDetailsOpen then
         gr.setFont(smolFont)
         gr.draw(galaxyDetails, 300, 300)
-        gr.printf(openGalaxy.name, 410, 320, 100)
+        gr.printf(openGalaxy.name, 410, 320, 120)
         
         local gt = nil
         
@@ -294,6 +304,7 @@ function love.draw()
       gr.printf("Leave Galaxy", galaxyButton.x+8, galaxyButton.y+24, 232, "center")
       gr.setFont(spaceFont)
       gr.printf(player.location.desc, 50, 110, 300)
+      gr.setFont(spaceFont)
       
       --Galaxy
       
@@ -322,7 +333,7 @@ function love.draw()
         gr.draw(modal, 0, 0)
         gr.setFont(smolFontDark)
         if openPlanet.actionTaken then
-          gr.printf(openPlanet.inter[6], 200, 200, 400, "center")
+          gr.printf(openPlanet.actionResult, 200, 200, 400, "center")
           gr.draw(actionOk.src, actionOk.x, actionOk.y)
           gr.printf("OKAY", actionOk.x + 100, actionOk.y + 24, 100)
         else
@@ -336,16 +347,18 @@ function love.draw()
       
     end
     
+    canCheckCursor = true
+    
     
   end
   
   if areStatsOpen then
     gr.setFont(smolFont)
     gr.draw(statSheet, 390, 50)
-    local burn = player.fuelBurnRate .. " per jump"
-    local earn = player.fuelEarnRate .. "x drill multip."
-    local cred = player.moneyEarnRate .. "c fuel sale price"
-    local disc = player.tradeDiscount .. "% off purchases"
+    local burn = player.fuelBurnRate .. " used per jump"
+    local earn = player.fuelEarnRate .. "x drill mult."
+    local cred = player.moneyEarnRate*100 .. "% fuel sale mult."
+    local disc = player.tradeDiscount*100 .. "% off purchases"
     gr.printf(burn, 542, 70, 90)
     gr.printf(earn, 542, 130, 90)
     gr.printf(cred, 542, 190, 90)
@@ -359,6 +372,7 @@ end
 
 function love.mousemoved(x, y, dx, dy, istouch)
   
+  if not canCheckCursor then return end
   if not areStatsOpen and (intro < 1 or intro > 4) then
     if nav then
       for i=1, table.getn(galaxyMap.layers[player.currentLayer + 1]) do
@@ -668,53 +682,123 @@ function executeAction()
   local stat = openPlanet.inter[2]
   local change = openPlanet.inter[3]
   local purchase = openPlanet.inter[5]
+  openPlanet.actionResult = openPlanet.inter[6]
   
   -- fuel is mined
   if stat == "fuel" then
-    player.fuel = player.fuel + (change * player.fuelEarnRate)
+    local success = checkMaxFuel()
+    if success then 
+      player.fuel = player.fuel + (change * player.fuelEarnRate)
+    else
+      openPlanet.actionResult = tooMuchFuel
+    end
     
   -- an amount of fuel is purchased or sold
   elseif stat == "fuelTransaction" then
-    player.fuel = player.fuel + change
-    if player.fuel > 5 then player.fuel = 5 end
-    player.credits = player.credits + (purchase * player.tradeDiscount)
+  local success = false
+    if change < 0 then
+      success = checkMinFuel(change)
+    else
+      success = checkMaxFuel() and checkMinCreds(purchase  * (1 - player.tradeDiscount))
+    end
+    
+    if success then
+      player.fuel = player.fuel + change
+      if player.fuel > 5 then player.fuel = 5 end
+      player.credits = player.credits + (purchase  * (1 - player.tradeDiscount))
+    else
+      openPlanet.actionResult = "You either don't have enough fuel to sell, or you don't have enough credits to buy. You may also be maxed out on fuel. In any case, something didn't work."
+    end
   
   -- some amount of money is earned or given
   elseif stat == "credits" then
     player.credits = player.credits + change
     
-    
    -- research upgrades below 
    
    -- fuel is burned at a slower rate between systems
   elseif stat == "fuelBurnRate" then
-    player.fuelBurnRate = player.fuelBurnRate + change
-    if player.fuelBurnRate <= 0 then
-      player.fuelBurnRate = .05 end
-    player.researched = player.researched + 1
-    player.credits = player.credits + (purchase * player.tradeDiscount)
+    
+    local success = checkMinCreds(purchase * (1 - player.tradeDiscount))
+    if success then
+      player.fuelBurnRate = player.fuelBurnRate + change
+      if player.fuelBurnRate <= 0 then
+        player.fuelBurnRate = .01 end
+      player.researched = player.researched + 1
+      player.credits = player.credits + (purchase * (1 - player.tradeDiscount))
+    else
+      openPlanet.actionResult = notEnoughCreds
+    end
     
   -- fuel is mined at a faster rate  
-  elseif stat == "fuelEarnRate" then
-    player.fuelEarnRate = player.fuelEarnRate + change
-    player.researched = player.researched + 1
-    player.credits = player.credits + (purchase * player.tradeDiscount)
+elseif stat == "fuelEarnRate" then
+  
+    local success = checkMinCreds(purchase  * (1 - player.tradeDiscount))
+    if success then
+      
+      player.fuelEarnRate = player.fuelEarnRate + change
+      player.researched = player.researched + 1
+      player.credits = player.credits + (purchase  * (1 - player.tradeDiscount))
+    else
+      openPlanet.actionResult = notEnoughCreds
+    end
+    
     
   -- money is earned at a faster rate  
   elseif stat == "moneyEarnRate" then  
-    player.moneyEarnRate = player.moneyEarnRate + change
-    player.researched = player.researched + 1
-    player.credits = player.credits + (purchase * player.tradeDiscount)
-  
-  -- fuel and upgrades can be bought at a lower cost
+    
+    local success = checkMinCreds(purchase * (1 - player.tradeDiscount))
+    if success then
+      player.moneyEarnRate = player.moneyEarnRate + change
+      player.researched = player.researched + 1
+      player.credits = player.credits + (purchase  * (1 - player.tradeDiscount))
+    else
+      openPlanet.actionResult = notEnoughCreds
+    end
+    
+    
+    -- fuel and upgrades can be bought at a lower cost
   elseif stat == "tradeDiscount" then
-    player.tradeDiscount = player.tradeDiscount + change
-    player.researched = player.researched + 1
-    player.credits = player.credits + (purchase * player.tradeDiscount)
+    
+    local success = checkMinCreds(purchase * (1 - player.tradeDiscount))
+    if success then
+      player.tradeDiscount = player.tradeDiscount + change
+      player.researched = player.researched + 1
+      player.credits = player.credits + (purchase  * (1 - player.tradeDiscount))
+    else
+      openPlanet.actionResult = notEnoughCreds
+    end
   end
-  
+
   
 end
+
+function checkMaxFuel()
+  
+  return player.fuel < 5
+  
+end
+
+
+function checkMinFuel(req)
+  
+  return player.fuel >= -req
+  
+end
+
+function checkMinCreds(req)
+  
+  return player.credits >= -req
+  
+end
+
+
+
+
+
+
+
+
 
 function animateSpace()
   

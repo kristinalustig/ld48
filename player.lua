@@ -12,8 +12,8 @@ function M.new()
       researched = 0,
       fuelBurnRate = 1,
       fuelEarnRate = .5,
-      moneyEarnRate = 10,
-      tradeDiscount = 20
+      moneyEarnRate = 0,
+      tradeDiscount = 0
       
       }, M)
   
