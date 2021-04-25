@@ -12,6 +12,7 @@ function love.load()
   
   gr = love.graphics
   
+  -- Static assets and fonts (non-interactive)
   spaceFont = gr.newImageFont('src/outerfont.png', ' ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!?.,"\'-()$:;@+=*%')
   smolFont = gr.newImageFont('src/smolfont.png', ' ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-"\'?.,')
   smolFontDark = gr.newImageFont('src/smolfontdark.png', ' ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-"\'?.,')
@@ -26,27 +27,36 @@ function love.load()
   scienceDetail = gr.newImage("src/scienceDetail.png")
   mysteryDetail = gr.newImage("src/mysteryDetail.png")
   fuelDetail = gr.newImage("src/fuelDetail.png")
+  modal = gr.newImage("src/modal.png")
+  cred = gr.newImage("src/cred.png")
+  fuel = gr.newImage("src/fuel.png")
+  textbox = gr.newImage("src/textbox.png")
+  title = gr.newImage("src/title.png")
+  fuelFull = gr.newImage("src/fuelCellFull.png")
+  fuelEmpty = gr.newImage("src/fuelCellEmpty.png")
   
+  --important global variables
   galaxyMap = Map.new()
   arePlanetDetailsOpen = false
   areGalaxyDetailsOpen = false
   openPlanet = nil
   openGalaxy = nil
+  isModalOpen = false
+  firstTimeWarp = true
   
-  intro = 0
+  intro = 5
   timer = 0
-  nav = false
+  nav = true
   reset = true
   
-  cred = gr.newImage("src/cred.png")
-  fuel = gr.newImage("src/fuel.png")
-  textbox = gr.newImage("src/textbox.png")
-  title = gr.newImage("src/title.png")
+  
+  --button tables and other interactive/animated elements
   start = {
     src = gr.newImage("src/start.png"),
     x = 240,
     y = 420
   }
+  
   arrowR = {
     src1 = gr.newImage("src/arrowR1.png"),
     src2 = gr.newImage("src/arrowR2.png"),
@@ -61,9 +71,6 @@ function love.load()
     y = 500
   }
   arrowL.src = arrowL.src1
-  
-  fuelFull = gr.newImage("src/fuelCellFull.png")
-  fuelEmpty = gr.newImage("src/fuelCellEmpty.png")
   
   ship = {
     src = gr.newImage("src/ship.png"),
@@ -98,24 +105,20 @@ function love.load()
     y = 392
   }
   
+  modalYes = {
+    src = gr.newImage("src/modalYes.png"),
+    x = 200,
+    y = 360
+  }
   
+  modalNo = {
+    src = gr.newImage("src/modalNo.png"),
+    x = 420,
+    y = 360
+  }
   
   player = Player.new()
-  
-  
-  print(galaxyMap.layers[1][1].planets[2].name)
-  print(galaxyMap.layers[1][1].planets[2].desc)
-  
-  -- THIS IS FOR TESTING TO MAKE SURE GENERATION IS WORKING
-  for i=1, table.getn(galaxyMap.layers) do
-    for j=1, table.getn(galaxyMap.layers[i]) do
-      for k=1, table.getn(galaxyMap.layers[i][j].planets) do
-        local pname = galaxyMap.layers[i][j].planets[k].name
-        -- print(pname)
-      end
-    end
-  end
-  
+
 end
 
 function love.update(dt)
@@ -124,14 +127,12 @@ function love.update(dt)
   
   if intro == 2 then
     animArrow(arrowR)
-  elseif intro == 3 then
+  elseif intro == 3 or intro == 4 then
     animArrow(arrowR)
     animArrow(arrowL)
   elseif nav == true then
     hoverShip()
   end
-  
-  
   
 end
 
@@ -143,23 +144,30 @@ function love.draw()
   -- HERE WE CAN PUT THE TUTORIAL!
   if intro == 1 then
     
+    gr.setFont(smolFont)
     gr.draw(title, 0, 0)
     gr.draw(start.src, start.x, start.y)
+    gr.printf(("A Ludum Dare 48 compo entry by kristinamay"):upper(), 0, 550, 800, "center")
+    gr.setFont(spaceFont)
     
   elseif intro == 2 then
     
-    gr.printf("Your name is 72H. You're a space adventurer, also known as a spaceventurer. (Unfortunately, you can't convince anyone else to call you a spaceventurer.) Your mission? Explore the furthest reaches of deep space! You must balance mining fuel, earning credits, and indulging your wanderlust. \n \n ...also, getting people to call you a spaceventurer.", 100, 200, 600, "center")
+    gr.printf("Your name is 72H, but your friends call you Sev. \n \n You're a space adventurer, also known as a spaceventurer. (Unfortunately, you can't convince anyone else to call you a spaceventurer.) Your mission? Explore the furthest reaches of deep space! You must balance mining fuel, earning credits, and indulging your wanderlust. \n \n ...also, getting people to call you a spaceventurer.", 100, 150, 600, "center")
     gr.draw(arrowR.src, arrowR.x, arrowR.y)
   
   elseif intro == 3 then
   
-    gr.printf("To 'play' the 'game' (aka pilot your spaceship), you must choose which solar system to warp to, and then scan the planets to find out more about them. From there, you can take available actions or move on to the next system. An ending, you ask? Does SPACE have an ending? (No, it does not. Neither does this game. But it *does* have animated tutorial arrows, and handmade fonts!) Press the animated tutorial arrow to continue.", 100, 200, 600, "center")
+    gr.printf("To 'play' the 'game' (aka pilot your spaceship), you must choose which solar system to warp to (you can scan them first!), and then scan the planets to find out more about them. From there, you can take the available action on a given planet for a cost, or move on to the next system. \n \n An ending, you ask? Does SPACE have an ending? (No, it does not. Neither does this game. But it *does* have animated tutorial arrows, and handmade fonts!) \n \n Press the animated tutorial arrow to continue.", 100, 100, 600, "center")
+    gr.draw(arrowR.src, arrowR.x, arrowR.y)
+    gr.draw(arrowL.src, arrowL.x, arrowL.y)
+    
+  elseif intro == 4 then
+  
+    gr.printf("As you delve further into space (which is helpfully sorted into galaxies), keep in mind: you can only visit one solar system per galaxy. That's because you're not the best-behaved spaceventurer out there, and if you stick around in one place too long, beings start asking questions. It's best to keep moving. \n \nSo, if you're ready, and you're eager to explore the depths of uncharted space, let's GO!", 100, 150, 600, "center")
     gr.draw(arrowR.src, arrowR.x, arrowR.y)
     gr.draw(arrowL.src, arrowL.x, arrowL.y)
     
   else
-    
-    --ACTUAL GAME STUFF GOES HERE
     
     --Topbar UI
     gr.draw(fuel, 30, 32)
@@ -242,6 +250,16 @@ function love.draw()
         
       end
       
+      if isModalOpen then
+        gr.draw(modal, 0, 0)
+        gr.setFont(smolFontDark)
+        gr.printf(("Here is some sample modal text that will be filled in by the open planet action"):upper(), 200, 200, 400, "center")
+        gr.draw(modalYes.src, modalYes.x, modalYes.y)
+        gr.draw(modalNo.src, modalNo.x, modalNo.y)
+        gr.setFont(spaceFont)
+      end
+      
+      
     end
     
     
@@ -259,10 +277,10 @@ function love.mousepressed(x, y, button, istouch)
     
     if testOverlap(x, y, arrowR) then intro = 3 end
     
-  elseif intro == 3 then
+  elseif intro == 3 or intro == 4 then
     
-    if testOverlap(x, y, arrowR) then intro = 0
-    elseif testOverlap(x, y, arrowL) then intro = 2 end
+    if testOverlap(x, y, arrowR) then intro = intro + 1
+    elseif testOverlap(x, y, arrowL) then intro = intro - 1 end
     
   elseif nav == true then
     
@@ -295,17 +313,38 @@ function love.mousepressed(x, y, button, istouch)
   elseif nav == false then
     
     if arePlanetDetailsOpen then
+      
+      if isModalOpen then
+        
+        if testOverlap(x, y, modalYes) then
+          
+          executeAction()
+          openPlanet.actionTaken = true
+          isModalOpen = false
+          return
+          
+        elseif testOverlap(x, y, modalNo) then
+          
+          isModalOpen = false
+          return
+        end
+        
+          
+      end
+        
         
       if testOverlap(x, y, planetButton) and not openPlanet.actionTaken then
-        
-        -- Todo: make sure that players can only do this once, prob add a flag on the action itself
-        -- make it a table instead of a string
-        
-        player.credits = player.credits + 10
-        openPlanet.actionTaken = true
+        isModalOpen = true
+        return
         
       end
         
+    end
+    
+    if testOverlap(x, y, galaxyButton) then
+      nav = true
+      openPlanet = nil
+      arePlanetDetailsOpen = false
     end
     
     
@@ -468,6 +507,59 @@ function positionGalaxies(gals)
   for i=1, n do
     gr.draw(galaxySheet, gals[i].src, gals[i].x, gals[i].y)
   end
+  
+end
+
+function executeAction()
+  
+  local stat = openPlanet.inter[2]
+  local change = openPlanet.inter[3]
+  local purchase = openPlanet.inter[5]
+  
+  -- fuel is mined
+  if stat == "fuel" then
+    player.fuel = player.fuel + fuelEarnRate
+    
+  -- an amount of fuel is purchased or sold
+  elseif stat == "fuelTransaction" then
+    player.fuel = player.fuel + change
+    if player.fuel > 5 then player.fuel = 5 end
+    player.credits = player.credits + (purchase * player.tradeDiscount)
+  
+  -- some amount of money is earned or given
+  elseif stat == "credits" then
+    player.credits = player.credits + change
+    
+    
+   -- research upgrades below 
+   
+   -- fuel is burned at a slower rate between systems
+  elseif stat == "fuelBurnRate" then
+    player.fuelBurnRate = player.fuelBurnRate + change
+    if player.fuelBurnRate <= 0 then
+      player.fuelBurnRate = .05 end
+    player.researched = player.researched + 1
+    player.credits = player.credits + (purchase * player.tradeDiscount)
+    
+  -- fuel is mined at a faster rate  
+  elseif stat == "fuelEarnRate" then
+    player.fuelEarnRate = player.fuelEarnRate + change
+    player.researched = player.researched + 1
+    player.credits = player.credits + (purchase * player.tradeDiscount)
+    
+  -- money is earned at a faster rate  
+  elseif stat == "moneyEarnRate" then  
+    player.moneyEarnRate = player.moneyEarnRate + change
+    player.researched = player.researched + 1
+    player.credits = player.credits + (purchase * player.tradeDiscount)
+  
+  -- fuel and upgrades can be bought at a lower cost
+  elseif stat == "tradeDiscount" then
+    player.tradeDiscount = player.tradeDiscount + change
+    player.researched = player.researched + 1
+    player.credits = player.credits + (purchase * player.tradeDiscount)
+  end
+  
   
 end
 

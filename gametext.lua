@@ -126,9 +126,103 @@ function M.initialize()
     "Z"
   }
   
+  
+  fuelActions = {
+    --button name, stat, impact, flavor, purchase price
+    {"FuelIncrease", "fuel", 0, "flavor text", 0},
+    {"FuelIncrease", "fuel", 0, "flavor text", 0},
+    {"FuelIncrease", "fuel", 0, "flavor text", 0},
+    {"FuelIncrease", "fuel", 0, "flavor text", 0},
+    {"FuelIncrease", "fuel", 0, "flavor text", 0},
+    {"FuelIncrease", "fuel", 0, "flavor text", 0},
+    {"FuelIncrease", "fuel", 0, "flavor text", 0},
+    {"FuelIncrease", "fuel", 0, "flavor text", 0},
+    
+    {"fuelTransaction", "fuelTransaction", -1, "flavor text", 10},
+    {"fuelTransaction", "fuelTransaction", -1, "flavor text", 20},
+    {"fuelTransaction", "fuelTransaction", -1, "flavor text", 10},
+    {"fuelTransaction", "fuelTransaction", -1, "flavor text", 20},
+    {"fuelTransaction", "fuelTransaction", 1, "flavor text", -10},
+    {"fuelTransaction", "fuelTransaction", 1, "flavor text", -20},
+    {"fuelTransaction", "fuelTransaction", 1, "flavor text", -15},
+    
+    {"fuelBurnRate", "fuelBurnRate", -.15, "flavor", -10},
+    {"fuelBurnRate", "fuelBurnRate", -.25, "flavor", 0},
+    {"fuelBurnRate", "fuelBurnRate", -.05, "flavor", 0},
+    {"fuelBurnRate", "fuelBurnRate", -.05, "flavor", 0},
+    {"fuelBurnRate", "fuelBurnRate", .25, "flavor", -20},
+    {"fuelBurnRate", "fuelBurnRate", -.25, "flavor", -10},
+    
+    {"fuelEarnRate", "fuelEarnRate", .25, "flavor", -10},
+    {"fuelEarnRate", "fuelEarnRate", .25, "flavor", -10},
+    {"fuelEarnRate", "fuelEarnRate", .25, "flavor", -10},
+    {"fuelEarnRate", "fuelEarnRate", .25, "flavor", -10},
+    {"fuelEarnRate", "fuelEarnRate", .25, "flavor", -10}
+  }
+  
+  
+  moneyActions = {
+    --button name, stat, impact, flavor, purchase price
+    {"credits", "credits", 1, "flavor", -10},
+    {"credits", "credits", 1, "flavor", -10},
+    {"credits", "credits", 1, "flavor", -10},
+    {"credits", "credits", 1, "flavor", -10},
+    {"credits", "credits", 1, "flavor", -10},
+    {"credits", "credits", 1, "flavor", -10},
+    {"credits", "credits", 1, "flavor", -10},
+    {"credits", "credits", 1, "flavor", -10},
+    
+    {"fuelTransaction", "fuelTransaction", -1, "flavor text", 10},
+    {"fuelTransaction", "fuelTransaction", -1, "flavor text", 20},
+    {"fuelTransaction", "fuelTransaction", -1, "flavor text", 10},
+    {"fuelTransaction", "fuelTransaction", -1, "flavor text", 20},
+    {"fuelTransaction", "fuelTransaction", 1, "flavor text", -10},
+    {"fuelTransaction", "fuelTransaction", 1, "flavor text", -20},
+    {"fuelTransaction", "fuelTransaction", 1, "flavor text", -15}
+  }
+  
+  
+  researchActions = {
+    --button name, stat, impact, flavor, purchase price
+    {"fuelBurnRate", "fuelBurnRate", -.15, "flavor", -10},
+    {"fuelBurnRate", "fuelBurnRate", -.25, "flavor", 0},
+    {"fuelBurnRate", "fuelBurnRate", -.05, "flavor", 0},
+    {"fuelBurnRate", "fuelBurnRate", -.05, "flavor", 0},
+    {"fuelBurnRate", "fuelBurnRate", .25, "flavor", -20},
+    {"fuelBurnRate", "fuelBurnRate", -.25, "flavor", -10},
+    
+    {"fuelEarnRate", "fuelEarnRate", .25, "flavor", -10},
+    {"fuelEarnRate", "fuelEarnRate", .25, "flavor", -10},
+    {"fuelEarnRate", "fuelEarnRate", .25, "flavor", -10},
+    {"fuelEarnRate", "fuelEarnRate", .25, "flavor", -10},
+    {"fuelEarnRate", "fuelEarnRate", .25, "flavor", -10},
+    
+    {"moneyEarnRate", "moneyEarnRate", .25, "flavor", -10},
+    {"moneyEarnRate", "moneyEarnRate", .25, "flavor", -10},
+    {"moneyEarnRate", "moneyEarnRate", .25, "flavor", -10},
+    {"moneyEarnRate", "moneyEarnRate", .25, "flavor", -10},
+    {"moneyEarnRate", "moneyEarnRate", .25, "flavor", -10},
+    {"moneyEarnRate", "moneyEarnRate", .25, "flavor", -10},
+    
+    {"tradeDiscount", "tradeDiscount", .25, "flavor", -10},
+    {"tradeDiscount", "tradeDiscount", .25, "flavor", -10},
+    {"tradeDiscount", "tradeDiscount", .25, "flavor", -10},
+    {"tradeDiscount", "tradeDiscount", .25, "flavor", -10},
+    {"tradeDiscount", "tradeDiscount", .25, "flavor", -10},
+    {"tradeDiscount", "tradeDiscount", .25, "flavor", -10}
+  }
+  
   planetActions = {
-    --button name, stat, impact
-    {"Action","fuel",-1},
+    --button name, stat, impact, flavor, purchase price
+    -- DONT FORGET TO MENTION DISCOUNTS
+    -- TODO: create extra text that has disclaimers for each type
+    
+    
+    
+    
+    
+    
+    
   }
   
   galaxyDescriptions = {
@@ -138,7 +232,6 @@ function M.initialize()
   galaxyNames = {
     
   }
-
   
   warpNarrative = { 
     

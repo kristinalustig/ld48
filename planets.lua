@@ -10,7 +10,7 @@ function M.new(parentType)
       nameSeed = love.math.random(1, 40),
       descSeed = love.math.random(1, 20),
       typeSeed = love.math.random(1, 100),
-      interactionSeed = love.math.random(1, 100),
+      interactionSeed = love.math.random(1, 25),
       actionTaken = false
       
       }, M)
@@ -19,7 +19,7 @@ function M.new(parentType)
   self.name = planetRName(self.nameSeed)
   self.pType = planetRType(self.typeSeed, self.parentType)
   self.desc = planetRDesc(self.descSeed)
-  self.inter = planetRInteraction(self.interactionSeed)
+  self.inter = planetRInteraction(self.interactionSeed, self.pType)
   
   return self
   
@@ -59,9 +59,23 @@ function planetRType(seed, t)
   
 end
 
-function planetRInteraction(seed)
+function planetRInteraction(seed, pType)
   
-  return planetActions[1]
+  if pType == "fuel" then
+    return fuelActions[seed]
+  elseif pType == "ore" then
+    return moneyActions[seed]
+  elseif pType == "research" then
+    return researchActions[seed]
+  elseif pType == "random" then
+    if seed % 2 == 0 then
+      return moneyActions[seed]
+    elseif seed % 3 == 0 then
+      return fuelActions[seed]
+    else
+      return researchActions[seed]
+    end
+  end
   
 end
 

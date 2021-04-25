@@ -9,7 +9,11 @@ function M.new()
       currentLayer = 1,
       fuel = 3,
       credits = 10,
-      discoveries = 0
+      researched = 0,
+      fuelBurnRate = 1,
+      fuelEarnRate = .5,
+      moneyEarnRate = 10,
+      tradeDiscount = 0
       
       }, M)
   
