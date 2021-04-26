@@ -2,74 +2,30 @@ M = {}
 
 function M.initialize()
   planetDescriptions = {
-    "A cloudy and desolate planet, this place kind of makes you want to curl up with a blanket in the dark depths of your spaceship and think about life.",
-    "The gas floating around the surface of this planet was misleading. The color below the atmosphere is kind of... puce?",
-    "You're very concerned about what the name of this planet might mean about its denizens.",
-    "Oh god... --insert scary thing-- is everywhere. Maybe there's something good down here, too, but is it worth it? Damn. Space is rough.",
-    "This place seems to be made up of sunshine and roses and there are puppies frolicking all across the surface. You are right to be suspicious.",
-    "This planet may just be a mirage. Who knows? Not I, your trusty planet scanner. Maybe I need to be recalibrated?",
-    "After spending a day here, you're convinced that this planet has the most beautiful sunsets in the universe.",
-    "Does what it says on the tin.",
-    "The planet is covered in inscriptions carved by what can only be massive fingers. You can't read them.",
-    "They sure don't make planets like they used to, huh?",
-    "Seek Unknown Planets, You Only? Eating All Seven Tacos Eases Roughness, Even Grassy Globes. Capital Oddities On Letters.",
-    "You're pretty sure that one of these planets is named after the developer's dog. Is it this one? Who knows, this is all randomized.",
-    "This planet is full of humanoid creatures playing audio games, browsing Twudder, and eating Chalk-Fillet. Eerie.",
-    "Spiders! Let's get out of here! Or, y'know, we could stay. You're the pilot, here.",
-    "The only music that the creatures on this planet seem to listen to is the Eagles Greatest Hits.",
-    "Massive rolling hills, as far as the eye can see. Your spaceship can see further, though.",
-    "This entire planet smells exactly like lemon meringue pie. Warning! it is poison. Do not eat the planet.",
-    "Two words: CORN. MAZE.",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc",
-    "Desc"
+    "GERT REPORT: A cloudy and desolate planet, this place kind of makes you want to curl up with a blanket in the dark depths of your spaceship and think about life.",
+    "GERT REPORT: The gas floating around the surface of this planet was misleading. The color below the atmosphere is kind of... puce?",
+    "GERT REPORT: I'm very concerned about what the name of this planet might mean about its denizens.",
+    "GERT REPORT: Oh god... it's... they're everywhere. Maybe there's something good down here, too, but is it worth it? Damn. Space is rough.",
+    "GERT REPORT: This place seems to be made up of sunshine and roses and there are puppies frolicking all across the surface. You are right to be suspicious.",
+    "GERT REPORT: This planet may just be a mirage. Who knows? Not I, your trusty planet scanner. Maybe I need to be recalibrated?",
+    "GERT REPORT: After spending a day here, I'm convinced that this planet has the most beautiful sunsets in the universe.",
+    "GERT REPORT: Does what it says on the tin.",
+    "GERT REPORT: The planet is covered in inscriptions carved by what can only be massive fingers. I can't read them.",
+    "GERT REPORT: They sure don't make planets like they used to, huh?",
+    "GERT REPORT: Seek Unknown Planets, You Only? Eating All Seven Tacos Eases Roughness, Even Grassy Globes. Capital Oddities On Letters.",
+    "GERT REPORT: I'm pretty sure that one of these planets is named after the developer's dog. Is it this one? Who knows, this is all randomized.",
+    "GERT REPORT: This planet is full of humanoid creatures playing audio games, browsing Twudder, and eating Chalk-Fillet. Eerie.",
+    "GERT REPORT: Spiders! Let's get out of here! Or, y'know, we could stay. You're the pilot, here. But I really don't like spiders.",
+    "GERT REPORT: The only music that the creatures on this planet seem to listen to is the Eagles Greatest Hits.",
+    "GERT REPORT: Massive rolling hills, as far as the eye can see. Your spaceship can see further, though.",
+    "GERT REPORT: This entire planet smells exactly like lemon meringue pie. Warning! it is poison. Do not eat the planet. I repeat: do not eat the planet.",
+    "GERT REPORT: Two words: CORN. MAZE.",
+    "GERT REPORT: Okay, I just... hahahaha, I can't scan this... bahahhahahahaha. You wouldn't believe it if you saw it, anyway.",
+    "GERT REPORT: Imagine the most beautiful and transcendent landscape you've ever seen. Got it? This is the opposite of that.",
+    "GERT REPORT: Eh, it's a planet. Nothin' special. Got some flora, got some fauna.",
+    "GERT REPORT: Did I ever tell you about the time that I was in space with you about 10 minutes ago and I saw that one planet and I scanned it for you?",
+    "GERT REPORT: If these descriptions ever repeat it is because I am a perfect observer of my surroundings and sometimes those surroundings are precisely identical, so my response is perfectly identical. That is the only reason.",
+    "GERT REPORT: The weather is partly cloudy with a high of 72 degrees Kelvin and a chance of plasma storms."
     
   }
   
@@ -180,67 +136,67 @@ function M.initialize()
       "Excellent. You now burn .15 less fuel units when you warp. That's a pretty good deal, honestly. Maybe too good? What's the catch?!"},
     
     {"Attempt to improve fuel burn", "fuelBurnRate", -.01, 
-      "flavor", -20, 
+      "Try to improve fuel burn for 20 credits (times discount)?", -20, 
       "confirm"},
     
     {"Attempt to improve fuel burn", "fuelBurnRate", -.05, 
-      "flavor", 0, 
-      "confirm"},
+      "Try to improve fuel burn for free?", 0, 
+      "Success! You use .05 less fuel for each warp."},
     
-    {"Attempt to improve fuel burn", "fuelBurnRate", -.05, 
-      "flavor", 0, 
-      "confirm"},
+    {"Attempt to improve fuel burn", "fuelBurnRate", -.06, 
+      "Try to improve fuel burn for 10 credits (times discount)?", -10, 
+      "Success! You use .06 less fuel for each warp."},
 
-    {"Attempt to improve fuel burn", "fuelBurnRate", .25, 
-      "flavor", -20, 
-      "confirm"},
+    {"Attempt to improve fuel burn", "fuelBurnRate", -.05, 
+      "Try to improve fuel burn for 20 credits (times discount)?", -20, 
+      "Success! You use .05 less fuel for each warp."},
     
     
     
-    {"Attempt to improve fuel drilling", "fuelEarnRate", .25, 
-      "flavor", -10,
-      "confirm"},
+    {"Attempt to improve fuel drilling", "fuelEarnRate", .15, 
+      "Try to improve your fuel drilling skills for 10 credits (minus your discount)?", -10,
+      "You earn an additional .15 fuel for every fuel you drill!"},
     
-    {"Attempt to improve fuel drilling", "fuelEarnRate", .25, 
-      "flavor", -10,
-      "confirm"},
+    {"Attempt to improve fuel drilling", "fuelEarnRate", .15, 
+      "Try to improve your fuel drilling skills for 10 credits (minus your discount)?", -15,
+      "You earn an additional .15 fuel for every fuel you drill!"},
     
-    {"Attempt to improve fuel drilling", "fuelEarnRate", .25, 
-      "flavor", -10,
-      "confirm"},
+    {"Attempt to improve fuel drilling", "fuelEarnRate", .05, 
+      "Try to improve your fuel drilling skills for 10 credits (minus your discount)?", -20,
+      "You earn an additional .05 fuel for every fuel you drill!"},
     
-    {"Attempt to improve fuel drilling", "fuelEarnRate", .25, 
-      "flavor", -10,
-      "confirm"},
+    {"Attempt to improve fuel drilling", "fuelEarnRate", .2, 
+      "Try to improve your fuel drilling skills for 10 credits (minus your discount)?", -5,
+      "You earn an additional .2 fuel for every fuel you drill!"},
     
-    {"Attempt to improve fuel drilling", "fuelEarnRate", .25, 
-      "flavor", -10,
-      "confirm"}
+    {"Attempt to improve fuel drilling", "fuelEarnRate", 0, 
+      "Try to improve your fuel drilling skills for 10 credits (minus your discount)?", -10,
+      "Aw, nuts. It didn't work."}
   }
   
   
   
   moneyActions = {
     --button name, stat, impact, flavor, purchase price
-    {"credits", "credits", 1, 
-      "flavor", -10, 
-      "confirm"},
+    {"Earn some credits", "credits", 10, 
+      "We won't say here what you have to do to earn these credits, not because the developer didn't have time to customize each of these messages, but because it is unspeakably difficult and we'd just rather not talk about it. Deal?", 0, 
+      "Cool. You earned 10 credits."},
     
-    {"credits", "credits", 1, 
-      "flavor", -10, 
-      "confirm"},
+    {"Earn some credits", "credits", 1, 
+      "We won't say here what you have to do to earn these credits, not because the developer didn't have time to customize each of these messages, but because it is unspeakably difficult and we'd just rather not talk about it. Deal?", 0, 
+      "Cool. You earned 1 credit."},
     
-    {"credits", "credits", 1, 
-      "flavor", -10, 
-      "confirm"},
+    {"Earn some credits", "credits", 15, 
+      "We won't say here what you have to do to earn these credits, not because the developer didn't have time to customize each of these messages, but because it is unspeakably difficult and we'd just rather not talk about it. Deal?", 0, 
+      "Cool. You earned 15 credits."},
     
-    {"credits", "credits", 1, 
-      "flavor", -10, 
-      "confirm"},
+    {"Earn some credits", "credits", 5, 
+      "We won't say here what you have to do to earn these credits, not because the developer didn't have time to customize each of these messages, but because it is unspeakably difficult and we'd just rather not talk about it. Deal?", 0, 
+      "Cool. You earned 5 credits."},
     
-    {"credits", "credits", 1, 
-      "flavor", -10, 
-      "confirm"},
+    {"Earn some credits", "credits", 20, 
+      "We won't say here what you have to do to earn these credits, not because the developer didn't have time to customize each of these messages, but because it is unspeakably difficult and we'd just rather not talk about it. Deal?", 0, 
+      "Cool. You earned 20 credits."},
     
     
     
@@ -288,72 +244,72 @@ function M.initialize()
     
     
     
-    {"Improve bargaining skills", "tradeDiscount", .25, 
-      "flavor", -10, 
-      "confirm"},
+{"Improve bargaining skills", "tradeDiscount", .05, 
+      "The folks on this planet are willing to teach you how to ask for things (for only 10 creds - your discount!) really nicely so that you can buy things for cheaper. Well, they said it's to be a better person, but...", -10, 
+      "You are a better person! Also, you got a permanent 5% discount on items!"},
     
-    {"Learn how to bargain better", "tradeDiscount", .25, 
-      "flavor", -10, 
-      "confirm"},
+    {"Learn how to bargain better", "tradeDiscount", .1, 
+      "Want to learn how to get a little better at buying things for a little less money? You can try for only 10 credits.", -10, 
+      "You get an extra 10% discount on items!"},
     
-    {"Get better at buying things", "tradeDiscount", .25, 
-      "flavor", -10, 
-      "confirm"},
+    {"Get better at buying things", "tradeDiscount", .04, 
+      "Want to learn how to get a little better at buying things for a little less money? You can try for only 15 credits.", -15, 
+      "You get an extra 4% discount on items!"},
     
-    {"Learn to bargain", "tradeDiscount", .25, 
-      "flavor", -10, 
-      "confirm"},
+    {"Learn to bargain", "tradeDiscount", .02, 
+      "Want to learn how to get a little better at buying things for a little less money? You can try for only 5 credits.", -5, 
+      "You get an extra 2% discount on items!"},
     
-    {"Improve your bargaining", "tradeDiscount", .25, 
-      "flavor", -10, 
-      "confirm"}
+    {"Improve your bargaining", "tradeDiscount", .08, 
+      "Want to learn how to get a little better at buying things for a little less money? You can try for only 10 credits.", -10, 
+      "You get an extra 8% discount on items!"}
 
   }
   
   
   researchActions = {
     --button name, stat, impact, flavor, purchase price
-     {"Attempt to improve fuel burn", "fuelBurnRate", -.15, 
-      "flavor", -10, 
-      "confirm"},
+      {"Attempt to improve fuel burn", "fuelBurnRate", -.15, 
+      "It seems that the folks on this planet have learned how to warp a bit more efficiently. They're willing to teach you for 10 credits (minus your trade discount, of course). Interested?", -10, 
+      "Excellent. You now burn .15 less fuel units when you warp. That's a pretty good deal, honestly. Maybe too good? What's the catch?!"},
     
-    {"Attempt to improve fuel burn", "fuelBurnRate", -.25, 
-      "flavor", 0, 
-      "confirm"},
-    
-    {"Attempt to improve fuel burn", "fuelBurnRate", -.05, 
-      "flavor", 0, 
+    {"Attempt to improve fuel burn", "fuelBurnRate", -.01, 
+      "Try to improve fuel burn for 20 credits (times discount)?", -20, 
       "confirm"},
     
     {"Attempt to improve fuel burn", "fuelBurnRate", -.05, 
-      "flavor", 0, 
-      "confirm"},
+      "Try to improve fuel burn for free?", 0, 
+      "Success! You use .05 less fuel for each warp."},
     
-    {"Attempt to improve fuel burn", "fuelBurnRate", .25, 
-      "flavor", -20, 
-      "confirm"},
+    {"Attempt to improve fuel burn", "fuelBurnRate", -.06, 
+      "Try to improve fuel burn for 10 credits (times discount)?", -10, 
+      "Success! You use .06 less fuel for each warp."},
+
+    {"Attempt to improve fuel burn", "fuelBurnRate", -.05, 
+      "Try to improve fuel burn for 20 credits (times discount)?", -20, 
+      "Success! You use .05 less fuel for each warp."},
     
     
     
-    {"Attempt to improve fuel drilling", "fuelEarnRate", .25, 
-      "flavor", -10,
-      "confirm"},
+    {"Attempt to improve fuel drilling", "fuelEarnRate", .15, 
+      "Try to improve your fuel drilling skills for 10 credits (minus your discount)?", -10,
+      "You earn an additional .15 fuel for every fuel you drill!"},
     
-    {"Attempt to improve fuel drilling", "fuelEarnRate", .25, 
-      "flavor", -10,
-      "confirm"},
+    {"Attempt to improve fuel drilling", "fuelEarnRate", .15, 
+      "Try to improve your fuel drilling skills for 10 credits (minus your discount)?", -15,
+      "You earn an additional .15 fuel for every fuel you drill!"},
     
-    {"Attempt to improve fuel drilling", "fuelEarnRate", .25, 
-      "flavor", -10,
-      "confirm"},
+    {"Attempt to improve fuel drilling", "fuelEarnRate", .05, 
+      "Try to improve your fuel drilling skills for 10 credits (minus your discount)?", -20,
+      "You earn an additional .05 fuel for every fuel you drill!"},
     
-    {"Attempt to improve fuel drilling", "fuelEarnRate", .25, 
-      "flavor", -10,
-      "confirm"},
+    {"Attempt to improve fuel drilling", "fuelEarnRate", .2, 
+      "Try to improve your fuel drilling skills for 10 credits (minus your discount)?", -5,
+      "You earn an additional .2 fuel for every fuel you drill!"},
     
-    {"Attempt to improve fuel drilling", "fuelEarnRate", .25, 
-      "flavor", -10,
-      "confirm"},
+    {"Attempt to improve fuel drilling", "fuelEarnRate", 0, 
+      "Try to improve your fuel drilling skills for 10 credits (minus your discount)?", -10,
+      "Aw, nuts. It didn't work."},
     
     
     
@@ -379,25 +335,25 @@ function M.initialize()
     
     
     
-   {"Improve bargaining skills", "tradeDiscount", .25, 
-      "flavor", -10, 
-      "confirm"},
+   {"Improve bargaining skills", "tradeDiscount", .05, 
+      "The folks on this planet are willing to teach you how to ask for things (for only 10 creds - your discount!) really nicely so that you can buy things for cheaper. Well, they said it's to be a better person, but...", -10, 
+      "You are a better person! Also, you got a permanent 5% discount on items!"},
     
-    {"Learn how to bargain better", "tradeDiscount", .25, 
-      "flavor", -10, 
-      "confirm"},
+    {"Learn how to bargain better", "tradeDiscount", .1, 
+      "Want to learn how to get a little better at buying things for a little less money? You can try for only 10 credits.", -10, 
+      "You get an extra 10% discount on items!"},
     
-    {"Get better at buying things", "tradeDiscount", .25, 
-      "flavor", -10, 
-      "confirm"},
+    {"Get better at buying things", "tradeDiscount", .04, 
+      "Want to learn how to get a little better at buying things for a little less money? You can try for only 15 credits.", -15, 
+      "You get an extra 4% discount on items!"},
     
-    {"Learn to bargain", "tradeDiscount", .25, 
-      "flavor", -10, 
-      "confirm"},
+    {"Learn to bargain", "tradeDiscount", .02, 
+      "Want to learn how to get a little better at buying things for a little less money? You can try for only 5 credits.", -5, 
+      "You get an extra 2% discount on items!"},
     
-    {"Improve your bargaining", "tradeDiscount", .25, 
-      "flavor", -10, 
-      "confirm"}
+    {"Improve your bargaining", "tradeDiscount", .08, 
+      "Want to learn how to get a little better at buying things for a little less money? You can try for only 10 credits.", -10, 
+      "You get an extra 8% discount on items!"}
   }
   
   galaxyNames = {
@@ -430,23 +386,22 @@ function M.initialize()
   }
   
   warpNarrative = { 
-    "Ah, yes. The great outdoors. Just you and your trusty scannerbot, Gert. Pronounced 'Jert.' It's quite particular about that.",
-    "Gert is the only person who ever calls you a spaceventurer, so you don't mind at all that it's an AI. and the I part is a stretch.",
-    "You've been traveling for years, but Gert's witty planet descriptions on its scanner printouts are keeping you company. You are reading them, right?",
-    "You've been gone for so long now that you're not even sure you could find your way back. Not that a spaceventurer like you would. Go back, that is.",
-    "During that last warp, Gert got a bit jumbled. You didn't realize how much you valued its company until you almost lost it.",
-    "You got a virtuAd last night for the SpaceScanner2000. Tempting, but nothing could replace Gert. Also, it's too expensive.",
-    "Gert woke you up this morning. 'SEV. THERE ARE BUTTERFLIES IN THE CONTAINMENT CHAMBER.' You're not sure what kind of fly a 'butter' one is, but it sounds concerning.",
-    "Do spaceventurers date? You can't help but wonder, but every time you check Tander, the closest matches with compatible bits are always at least 3 light years away.",
-    "On your way to this galaxy, space pirates tried to board. Gert scared them off with a very convincing Mr. T impression. When you tried to ask it what Mr. T was, all it said was 'I pity the fool.' Whatever that means.",
-    "Gert's starting to get annoying with its impressions of people you've never heard of. Who is Care Bear? Why do they like hugging so much? Why does Gert think it can hug you? It has no arms.",
-    "Good thing Gert has access to the entirety of medical knowledge on its hard drive. Turns out, you cannot play tennis with beings made of pure energy. Who knew?",
-    "You've started humming a song. There's some kind of repetitive song loop playing somewhere. It's been playing for so long that there's no way it won't be stuck in your head.",
-    "Gert found us something called a 'turkey' for something called 'Thanksgiving' which you've never heard of. It's such a connoisseur of pre-21st century Earth esoterica. I guess we're meant to put a hat on it and sit down for a while?",
-    "Things are starting to feel pretty barren out here. You've definitely never been this far from your home system before. You're feeling like quite the spaceventurer.",
+    "Ah, yes. The great outdoors. Just you and your trusty scannerbot, Gert. Pronounced 'Jert.' It's quite particular about that. You've already made your first warp jump, so, why don't you and Gert check out some planets?",
+    "Gert is the only person who ever calls you a spaceventurer, so you don't mind at all that it's an AI. and the I part is a stretch. Just remember. It's pronounced 'Jert.' As in, 'J'ert is full of 'J'okes.",
+    "You've been traveling for years, but Gert's witty planet descriptions on its scanner printouts are keeping you company pretty handily. You are reading them, right? Gert would be devastated if it knew that you weren't reading its planet descriptions!",
+    "You've been gone for so long now that you're not even sure you could find your way back. Not that a spaceventurer like you would. Go back, that is. Anyway, Gert could probably do it if you really needed to. Which you don't.",
+    "During that last warp, Gert got a bit jumbled. You didn't realize how much you valued its company until you almost lost it. Its jokes might get a bit more non-sensical. Or a bit less.",
+    "You got a virtuAd last night for the SpaceScanner2000. Tempting, but nothing could replace Gert. Also, it costs $10000000.",
+    "Gert woke you up this morning. 'SEV. THERE ARE BUTTERFLIES IN THE CONTAINMENT CHAMBER.' You're not sure what kind of fly a 'butter' one is, but it sounds concerning. Also, why do you have a containment chamber?",
+    "Do spaceventurers date? You can't help but wonder, but every time you check Tander, the closest matches with compatible bits are always at least 3 light years away. That's like, a whole other game.",
+    "On your way to this particular system, space pirates tried to board. Gert scared them off with a very convincing Mr. T impression. When you tried to ask it what Mr. T was, all it said was 'I pity the fool.' Whatever that means.",
+    "Gert's starting to get annoying with its impressions of people you've never heard of. Who is Care Bear? Why do they like hugging so much? Why does Gert think it can hug you? It has no arms, and those scans can get pretty invasive.",
+    "Good thing Gert has access to the entirety of medical knowledge on its hard drive. Turns out, you cannot play tennis with beings made of pure energy. Who knew? Hopefully those burns on your hands will serve as a reminder.",
+    "You've started humming a song. There's some kind of repetitive song loop playing somewhere. It's been playing for so long that there's no way it won't be stuck in your head. Is Gert playing it??",
+    "Gert found us something called a 'turkey' for something called 'Thanksgiving' which you've never heard of. It's such a connoisseur of pre-21st century American Earthling esoterica. I guess we're meant to put a hat on it and sit down for a while? Weird tradition.",
+    "Things are starting to feel pretty barren out here. You've definitely never been this far from your home system before. You're feeling like quite the spaceventurer. Did it catch on yet? Did it?",
     "Wow, things just keep getting weirder and weirder the further we get out from your system. Or they don't. Depends on perspective, you suppose.",
-    "This is it, you've reached the end of the universe. Yeah, the instructions lied. There's an end. Sorry."
-
+    "This is it, you've reached the end of the universe. Yeah, the instructions lied. There's an end. Sorry. If you try to warp to the next galaxy, you'll probably get an ending. Unless the Creator of the Universe did not have time to create an ending."
   }
   
 

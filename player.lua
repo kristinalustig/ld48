@@ -6,8 +6,8 @@ function M.new()
   local self = setmetatable({
       
       location = galaxyMap.layers[1][1],
-      currentLayer = 1,
-      fuel = 3,
+      currentLayer = 15,
+      fuel = 1,
       credits = 10,
       researched = 0,
       fuelBurnRate = 1,

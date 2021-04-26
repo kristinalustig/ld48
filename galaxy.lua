@@ -47,7 +47,7 @@ end
 
 function randomDesc(seed, l)
   
-  return warpNarrative[l] .. " Anyway."
+  if l <= 15 then return warpNarrative[l] else return "BONUS LEVELS" end
   
 end
 

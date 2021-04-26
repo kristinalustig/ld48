@@ -62,10 +62,13 @@ function love.load()
   notEnoughCreds = "You're gonna buy that, huh? With what money?"
   
   
-  intro = 0
+  intro = 1
   timer = 0
   nav = false
   reset = true
+  
+  gameScore = 0
+  
   
   
   --button tables and other interactive/animated elements
@@ -167,10 +170,12 @@ function love.update(dt)
     hoverShip()
   end
   
-  if player.fuel < 0 then
+  if player.fuel < 0 or gameOver then
     canCheckCursor = false
     gameOver = true
-    --calculate gameOver shit here
+    
+    gameScore = (player.credits + (player.fuel * 5) + (player.researched * 3) + (player.currentLayer * 4))
+    
   end
   
   
@@ -178,13 +183,30 @@ end
 
 function love.draw()
   
+  gr.setFont(spaceFont)
+  
   if gameOver then
-    -- put gameOver shit here
+    animateSpace()
+    gr.draw(bg.curr, 0, 0, 0, 1, -1, 0, 600)
+    
+    if player.currentLayer == galaxyMap.layerNum then
+      
+      gr.printf("Well, you did it. You reached the last level. Honestly, I wasn't sure if anyone would be able to do it, because I had no time to properly tune and balance the game. If you want to keep going, you can edit 'layerNum' in the map.lua file and it'll probably work.", 100, 100, 600, "center")
+      
+    else
+      
+      gr.printf("Welp, you ran out of fuel. That's okay, it happens. In fact, it happens so much that I had a hard time testing the actual ending of the game.", 100, 100, 600, "center")
+      
+    end
+    
+    gr.printf("To play again, you're going to have to close the game and restart. Thank you so much for playing! If you want, you can follow me on Twitter at @kristinalustig. Or, y'know, not. Whatever you'd like.", 100, 250, 600, "center")
+    
+    gr.printf("YOUR SCORE: " .. gameScore, 0, 400, 800, "center")
+    gr.printf("Your score is your credits + (leftover fuel * 5) + (ship upgrades * 3) + (light years reached * 4). Quite arbitrarily. Go forth and min-max to your heart's delight.", 100, 450, 600, "center")
+    
     
     return
   end
-  
-  gr.setFont(spaceFont)
   
   
   -- HERE WE CAN PUT THE TUTORIAL!
@@ -202,12 +224,12 @@ function love.draw()
     
   elseif intro == 2 then
     
-    gr.printf("Your name is 72H, but your friends call you Sev. \n \n You're a space adventurer, also known as a spaceventurer. (Unfortunately, you can't convince anyone else to call you a spaceventurer.) Your mission? Explore the furthest reaches of deep space! You must balance mining fuel, earning credits, and indulging your wanderlust. \n \n ...also, getting people to call you a spaceventurer.", 100, 150, 600, "center")
+    gr.printf("Your name is 72H, but your friends call you Sev. \n \n You're a space adventurer, also known as a spaceventurer. (Unfortunately, you can't convince anyone else to call you a spaceventurer.) Your mission? Explore the furthest reaches of deep space with your trusty scanner, Gert! You must balance mining fuel, earning credits, researching ship improvements, and indulging your wanderlust. \n \n ...also, getting people to call you a spaceventurer.", 100, 150, 600, "center")
     gr.draw(arrowR.src, arrowR.x, arrowR.y)
   
   elseif intro == 3 then
   
-    gr.printf("To 'play' the 'game' (aka pilot your spaceship), you must choose which solar system to warp to (you can scan them first!), and then scan the planets to find out more about them. From there, you can take the available action on a given planet for a cost, or move on to the next system. \n \n An ending, you ask? Does SPACE have an ending? (No, it does not. Neither does this game. But it *does* have animated tutorial arrows, and handmade fonts!) \n \n Press the animated tutorial arrow to continue.", 100, 100, 600, "center")
+    gr.printf("To 'play' the 'game' (aka pilot your spaceship), you must choose which solar system to warp to (you can scan them first!), and then scan the planets to find out more about them. From there, you can take the available action on a given planet (sometimes for a cost), or move on to the next system. \n \n An ending, you ask? Does SPACE have an ending? (No, it does not. Neither does this game. But it *does* have animated tutorial arrows, and handmade fonts!) \n \n Press the animated tutorial arrow to continue.", 100, 100, 600, "center")
     gr.draw(arrowR.src, arrowR.x, arrowR.y)
     gr.draw(arrowL.src, arrowL.x, arrowL.y)
     
@@ -258,14 +280,14 @@ function love.draw()
       gr.printf(locString, 300, 550, 240)
       gr.setFont(spaceFont)
       
-      if player.currentLayer < layerNum then
+      if player.currentLayer < galaxyMap.layerNum then
         positionGalaxies(galaxyMap.layers[player.currentLayer + 1])
       end
       
       if areGalaxyDetailsOpen then
         gr.setFont(smolFont)
         gr.draw(galaxyDetails, 300, 300)
-        gr.printf(openGalaxy.name, 410, 320, 120)
+        gr.printf(openGalaxy.name, 410, 315, 120)
         
         local gt = nil
         
@@ -281,7 +303,7 @@ function love.draw()
         
         gr.draw(gt, 312, 346)
         
-        gr.printf(openGalaxy.numPlanets .. " Planets", 416, 350, 120)
+        gr.printf(openGalaxy.numPlanets .. " Planets", 416, 352, 120)
         gr.draw(warpButton.src, warpButton.x, warpButton.y)
         
         if isWarpModalOpen then
@@ -355,10 +377,10 @@ function love.draw()
   if areStatsOpen then
     gr.setFont(smolFont)
     gr.draw(statSheet, 390, 50)
-    local burn = player.fuelBurnRate .. " used per jump"
-    local earn = player.fuelEarnRate .. "x drill mult."
-    local cred = player.moneyEarnRate*100 .. "% fuel sale mult."
-    local disc = player.tradeDiscount*100 .. "% off purchases"
+    local burn = tonumber(string.format("%.1f", player.fuelBurnRate)) .. " used per jump"
+    local earn = tonumber(string.format("%.1f", player.fuelEarnRate)) .. "x drill mult."
+    local cred = tonumber(string.format("%.1f", player.moneyEarnRate*100)) .. "% fuel sale mult."
+    local disc = tonumber(string.format("%.1f", player.tradeDiscount*100)) .. "% off purchases"
     gr.printf(burn, 542, 70, 90)
     gr.printf(earn, 542, 130, 90)
     gr.printf(cred, 542, 190, 90)
@@ -500,6 +522,7 @@ function love.mousepressed(x, y, button, istouch)
     end
     
     if testOverlap(x, y, galaxyButton) then
+      if player.currentLayer == galaxyMap.layerNum then gameOver = true return end
       nav = true
       openPlanet = nil
       arePlanetDetailsOpen = false

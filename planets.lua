@@ -8,7 +8,7 @@ function M.new(parentType)
       parentType = parentType,
       imgSeed = love.math.random(1, 25),
       nameSeed = love.math.random(1, 40),
-      descSeed = love.math.random(1, 20),
+      descSeed = love.math.random(1, 24),
       typeSeed = love.math.random(1, 100),
       interactionSeed = love.math.random(1, 10),
       actionTaken = false,
