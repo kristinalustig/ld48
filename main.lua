@@ -12,6 +12,15 @@ function love.load()
   
   gr = love.graphics
   
+  beep = love.audio.newSource("src/beep.mp3", "static")
+  boop = love.audio.newSource("src/boop.mp3", "static")
+  planets = love.audio.newSource("src/ethereal.wav", "static")
+  galaxy = love.audio.newSource("src/chill.wav", "static")
+  planets:setLooping(true)
+  beep:setLooping(false)
+  boop:setLooping(false)
+  
+  
   -- Static assets and fonts (non-interactive)
   spaceFont = gr.newImageFont('src/outerfont.png', ' ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!?.,"\'-()$:;@+=*%')
   smolFont = gr.newImageFont('src/smolfont.png', ' ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-"\'?.,abcdefghijklmnopqrstuvwxyz!@()*+=%')
@@ -154,6 +163,8 @@ function love.load()
   
   
   player = Player.new()
+  
+  planets:play()
 
 end
 
@@ -177,6 +188,7 @@ function love.update(dt)
     gameScore = (player.credits + (player.fuel * 5) + (player.researched * 3) + (player.currentLayer * 4))
     
   end
+
   
   
 end
@@ -422,6 +434,8 @@ end
 
 function love.mousepressed(x, y, button, istouch)
   
+  if gameOver then return end
+  
   if isWarpModalOpen then
     if not testOverlap(x, y, warpButton) then
       isWarpModalOpen = false
@@ -433,19 +447,24 @@ function love.mousepressed(x, y, button, istouch)
   if intro == 1 then
     
     if testOverlap(x, y, start) then intro = 2 end
+    boop:play()
     
   elseif intro == 2 then
     
     if testOverlap(x, y, arrowR) then intro = 3 end
+    boop:play()
     
   elseif intro == 3 or intro == 4 then
     
     if testOverlap(x, y, arrowR) then intro = intro + 1
-    elseif testOverlap(x, y, arrowL) then intro = intro - 1 end
+  elseif testOverlap(x, y, arrowL) then intro = intro - 1 
+    end
+  boop:play()
     
   elseif nav == true then
     
     if testOverlap(x, y, current) then
+      boop:play()
       nav = false
       return
     end
@@ -454,10 +473,12 @@ function love.mousepressed(x, y, button, istouch)
     if areGalaxyDetailsOpen then
       if testOverlap(x, y, warpButton) then
         if firstTimeWarp then
+          boop:play()
           isWarpModalOpen = true
           firstTimeWarp = false
           return
         else
+          boop:play()
           nav = false
           player.currentLayer = player.currentLayer + 1
           player.fuel = player.fuel - player.fuelBurnRate
@@ -476,9 +497,11 @@ function love.mousepressed(x, y, button, istouch)
     for i=1, table.getn(galaxyMap.layers[player.currentLayer + 1]) do
       if testOverlapGals(x, y, galaxyMap.layers[player.currentLayer + 1][i]) then
         if not areGalaxyDetailsOpen then
+          beep:play()
           areGalaxyDetailsOpen = true
           openGalaxy = galaxyMap.layers[player.currentLayer + 1][i]
         elseif areGalaxyDetailsOpen and openGalaxy ~= galaxyMap.layers[player.currentLayer + 1][i] then
+          beep:play()
           openGalaxy = galaxyMap.layers[player.currentLayer + 1][i]
         else
           areGalaxyDetailsOpen = false
@@ -494,17 +517,20 @@ function love.mousepressed(x, y, button, istouch)
       if isModalOpen then
         
         if testOverlap(x, y, actionOk) and openPlanet.actionTaken then
+          boop:play()
           isModalOpen = false
           return
         end
         
         if testOverlap(x, y, modalYes) then
+          boop:play()
           
           executeAction()
           openPlanet.actionTaken = true
           return
           
         elseif testOverlap(x, y, modalNo) then
+          boop:play()
           isModalOpen = false
           return
         end
@@ -514,6 +540,7 @@ function love.mousepressed(x, y, button, istouch)
         
         
       if testOverlap(x, y, planetButton) and not openPlanet.actionTaken then
+        boop:play()
         isModalOpen = true
         return
         
@@ -522,6 +549,7 @@ function love.mousepressed(x, y, button, istouch)
     end
     
     if testOverlap(x, y, galaxyButton) then
+      boop:play()
       if player.currentLayer == galaxyMap.layerNum then gameOver = true return end
       nav = true
       openPlanet = nil
@@ -532,9 +560,11 @@ function love.mousepressed(x, y, button, istouch)
     for i=1, table.getn(player.location.planets) do
       if testOverlapPlanets(x, y, player.location.planets[i]) then
         if not arePlanetDetailsOpen then
+          beep:play()
           arePlanetDetailsOpen = true 
           openPlanet = player.location.planets[i]
         elseif arePlanetDetailsOpen and openPlanet ~= player.location.planets[i] then
+          beep:play()
           openPlanet = player.location.planets[i]
         else
           arePlanetDetailsOpen = false
@@ -550,6 +580,7 @@ function love.mousepressed(x, y, button, istouch)
     if areStatsOpen then
       areStatsOpen = false
     else
+      boop:play()
       areStatsOpen = true
     end
   end
