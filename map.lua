@@ -15,8 +15,7 @@ function M.new()
   self.layers[1] = {
       Galaxy.new("fuel", 1),
       Galaxy.new("ore", 1),
-      Galaxy.new("research", 1),
-      Galaxy.new("random", 1)
+      Galaxy.new("research", 1)
     }
 
   for i=2, self.layerNum do

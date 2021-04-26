@@ -294,6 +294,8 @@ function love.draw()
       
       if player.currentLayer < galaxyMap.layerNum then
         positionGalaxies(galaxyMap.layers[player.currentLayer + 1])
+      else
+        canCheckCursor = false
       end
       
       if areGalaxyDetailsOpen then
@@ -480,6 +482,7 @@ function love.mousepressed(x, y, button, istouch)
         else
           boop:play()
           nav = false
+          canCheckCursor = false
           player.currentLayer = player.currentLayer + 1
           player.fuel = player.fuel - player.fuelBurnRate
           player.location = openGalaxy
@@ -500,12 +503,15 @@ function love.mousepressed(x, y, button, istouch)
           beep:play()
           areGalaxyDetailsOpen = true
           openGalaxy = galaxyMap.layers[player.currentLayer + 1][i]
+          return
         elseif areGalaxyDetailsOpen and openGalaxy ~= galaxyMap.layers[player.currentLayer + 1][i] then
           beep:play()
           openGalaxy = galaxyMap.layers[player.currentLayer + 1][i]
+          return
         else
           areGalaxyDetailsOpen = false
           openGalaxy = nil
+          return
         end
       end
     end
@@ -550,10 +556,11 @@ function love.mousepressed(x, y, button, istouch)
     
     if testOverlap(x, y, galaxyButton) then
       boop:play()
-      if player.currentLayer == galaxyMap.layerNum then gameOver = true return end
+      if player.currentLayer == galaxyMap.layerNum then gameOver = true canCheckCursor = false return end
       nav = true
       openPlanet = nil
       arePlanetDetailsOpen = false
+      return
     end
     
     
@@ -563,12 +570,15 @@ function love.mousepressed(x, y, button, istouch)
           beep:play()
           arePlanetDetailsOpen = true 
           openPlanet = player.location.planets[i]
+          return
         elseif arePlanetDetailsOpen and openPlanet ~= player.location.planets[i] then
           beep:play()
           openPlanet = player.location.planets[i]
+          return
         else
           arePlanetDetailsOpen = false
           openPlanet = nil
+          return
         end
       end
       
@@ -579,9 +589,11 @@ function love.mousepressed(x, y, button, istouch)
   if testOverlap(x, y, statLink) then
     if areStatsOpen then
       areStatsOpen = false
+      return
     else
       boop:play()
       areStatsOpen = true
+      return
     end
   end
   
@@ -728,6 +740,8 @@ function positionGalaxies(gals)
   for i=1, n do
     gr.draw(galaxySheet, gals[i].src, gals[i].x, gals[i].y)
   end
+  
+  canCheckCursor = true
   
 end
 
